@@ -267,7 +267,7 @@
   .btn-danger:active { background: rgba(255,68,68,0.15); transform: scale(0.97); }
 
   /* ── SLIDERS ── */
-  .setup-body { padding: 6px 24px 16px; }
+  .setup-body { padding: 8px 24px 16px; }
   .setup-footer { padding: 0 24px 48px; }
   .slider-group { margin-bottom: 28px; }
   .slider-label { font-size: 13px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--faint); text-align: center; margin-bottom: 4px; }
@@ -282,7 +282,7 @@
   }
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 40px; height: 25px;
+    width: 30px; height: 30px;
     border-radius: 6px;
     background: var(--white);
     cursor: pointer;
@@ -361,7 +361,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 50px 32px 35px;
+    padding: 72px 32px 52px;
     transition: background 0.35s ease;
   }
   .timer-phase {
@@ -376,7 +376,7 @@
   }
   .timer-ring-wrap {
     position: relative;
-    width: 300px; height: 300px;
+    width: 320px; height: 320px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
@@ -388,7 +388,7 @@
     transition: stroke-dashoffset 0.9s linear;
   }
   .timer-number {
-    font-size: 160px; font-weight: 400; color: var(--white);
+    font-size: 140px; font-weight: 400; color: var(--white);
     line-height: 1; text-align: center; position: relative; z-index: 1;
   }
   .timer-exercise {
@@ -638,8 +638,8 @@
   <div class="timer-phase" id="timer-phase">GET READY</div>
   <div class="timer-ring-wrap">
     <svg class="timer-ring-svg" viewBox="0 0 280 280">
-      <circle class="timer-ring-bg" cx="150" cy="150" r="142"/>
-      <circle class="timer-ring-progress" id="timer-ring" cx="150" cy="150" r="142"
+      <circle class="timer-ring-bg" cx="140" cy="140" r="144"/>
+      <circle class="timer-ring-progress" id="timer-ring" cx="140" cy="140" r="144"
         stroke-dasharray="791.7" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-number" id="timer-number">5</div>
@@ -859,7 +859,7 @@ const PHASE_COLORS = {
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 142; // 791.7
+const CIRCUMFERENCE = 2 * Math.PI * 144; // 791.7
 
 let timerSequence   = [];
 let timerIndex      = 0;
@@ -964,6 +964,8 @@ function runTick() {
       }, 600);
     }
   }, 1000);
+}
+
 function updateTimerDisplay(timeLeft, total) {
   document.getElementById('timer-number').textContent = timeLeft;
   const offset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
