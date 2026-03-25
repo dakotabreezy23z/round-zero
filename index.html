@@ -954,17 +954,20 @@ function runTick() {
     updateTimerDisplay(timerTimeLeft, timerSequence[timerIndex].duration);
 
     // 3, 2, 1 — high beep; 0 — even higher beep
-    if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
+if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
+    
     if (timerTimeLeft === 0) {
       timerBeep(1100);
-      setTimeout(() => {
-        timerIndex++;
-        if (timerIndex >= timerSequence.length) { clearInterval(timerInterval); finishTimer(); }
-        else { loadPhase(timerIndex); }
-      }, 600);
+      
+      // Move these OUT of the setTimeout for an instant transition
+      timerIndex++;
+      if (timerIndex >= timerSequence.length) { 
+          clearInterval(timerInterval); 
+          finishTimer(); 
+      } else { 
+          loadPhase(timerIndex); // New phase starts immediately at the 0 mark
+      }
     }
-  }, 1000);
-}
 
 function updateTimerDisplay(timeLeft, total) {
   document.getElementById('timer-number').textContent = timeLeft;
