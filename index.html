@@ -64,7 +64,7 @@
     font-size: 40px;
     display: flex;
     flex-direction: column;
-    font-weight: 650;
+    font-weight: 450;
     letter-spacing: 14px;
     color: var(--white);
     text-align: center;
@@ -355,6 +355,106 @@
 
   /* coming soon modal */
   .coming-soon-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
+
+  /* ── TIMER SCREEN ── */
+  #screen-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 72px 32px 52px;
+    transition: background 0.35s ease;
+  }
+  .timer-phase {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    font-family: 'Barlow', sans-serif;
+    text-align: center;
+    min-height: 20px;
+  }
+  .timer-ring-wrap {
+    position: relative;
+    width: 240px; height: 240px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .timer-ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .timer-ring-bg   { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 6; }
+  .timer-ring-progress {
+    fill: none; stroke: rgba(255,255,255,0.85); stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.9s linear;
+  }
+  .timer-number {
+    font-size: 96px; font-weight: 400; color: var(--white);
+    line-height: 1; text-align: center; position: relative; z-index: 1;
+  }
+  .timer-exercise {
+    text-align: center; min-height: 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .timer-next-label {
+    font-size: 13px; font-weight: 400; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(255,255,255,0.55);
+    font-family: 'Barlow', sans-serif;
+  }
+  .timer-exercise-name {
+    font-size: 36px; font-weight: 400; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--white);
+    text-align: center; line-height: 1.1;
+  }
+  .timer-round-info {
+    font-size: 15px; color: rgba(255,255,255,0.55);
+    font-family: 'Barlow', sans-serif; text-align: center;
+    margin-top: 4px; letter-spacing: 0.5px;
+  }
+  .timer-controls { display: flex; gap: 14px; width: 100%; }
+  .timer-btn {
+    flex: 1;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 16px; padding: 18px 8px;
+    font-size: 15px; font-weight: 400; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--white);
+    cursor: pointer; font-family: 'Anton', sans-serif;
+    transition: background 0.12s, transform 0.1s;
+  }
+  .timer-btn:active { background: rgba(255,255,255,0.28); transform: scale(0.97); }
+
+  /* ── DONE SCREEN ── */
+  #screen-done {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 60px 32px 60px; gap: 8px;
+    background: #006666;
+  }
+  .done-label {
+    font-size: 15px; letter-spacing: 5px; text-transform: uppercase;
+    color: rgba(255,255,255,0.55); font-family: 'Barlow', sans-serif;
+    margin-bottom: 8px;
+  }
+  .done-time {
+    font-size: 88px; font-weight: 400; color: var(--white);
+    line-height: 1; letter-spacing: 2px;
+  }
+  .done-sub {
+    font-size: 14px; color: rgba(255,255,255,0.45);
+    font-family: 'Barlow', sans-serif; margin-bottom: 48px;
+  }
+  .done-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.15); color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 16px; padding: 20px;
+    font-size: 18px; font-weight: 400; letter-spacing: 4px;
+    text-transform: uppercase; cursor: pointer;
+    font-family: 'Anton', sans-serif;
+    transition: background 0.12s, transform 0.1s;
+  }
+  .done-btn:active { background: rgba(255,255,255,0.28); transform: scale(0.97); }
 </style>
 </head>
 <body>
@@ -532,6 +632,37 @@
   <div class="setup-footer">
     <button class="btn-start" onclick="saveWorkout()">SAVE</button>
   </div>
+</div>
+
+<!-- TIMER SCREEN -->
+<div id="screen-timer" class="screen">
+  <div class="timer-phase" id="timer-phase">GET READY</div>
+  <div class="timer-ring-wrap">
+    <svg class="timer-ring-svg" viewBox="0 0 240 240">
+      <circle class="timer-ring-bg" cx="120" cy="120" r="108"/>
+      <circle class="timer-ring-progress" id="timer-ring" cx="120" cy="120" r="108"
+        stroke-dasharray="678.6" stroke-dashoffset="0"/>
+    </svg>
+    <div class="timer-number" id="timer-number">5</div>
+  </div>
+  <div class="timer-exercise">
+    <div class="timer-next-label" id="timer-next-label">NEXT UP</div>
+    <div class="timer-exercise-name" id="timer-exercise-name"></div>
+    <div class="timer-round-info" id="timer-round-info"></div>
+  </div>
+  <div class="timer-controls">
+    <button class="timer-btn" id="timer-pause-btn" onclick="timerPause()">PAUSE</button>
+    <button class="timer-btn" onclick="timerSkip()">SKIP</button>
+    <button class="timer-btn" onclick="timerStop()">STOP</button>
+  </div>
+</div>
+
+<!-- DONE SCREEN -->
+<div id="screen-done" class="screen">
+  <div class="done-label">Workout Complete</div>
+  <div class="done-time" id="done-time">0:00</div>
+  <div class="done-sub">total time</div>
+  <button class="done-btn" onclick="timerDone()">DONE</button>
 </div>
 
 <!-- DELETE MODAL -->
@@ -714,8 +845,179 @@ function toggleDetailStar() {
   if (!currentWorkout) return;
   toggleStar(currentWorkout.id, detailFromScreen === 'screen-favorites' ? 'favorites-list' : 'library-list', detailFromScreen);
 }
-function startWorkout() { alert('Timer coming next! 💪'); }
+function startWorkout() {
+  if (!currentWorkout) return;
+  launchTimer(currentWorkout, qsCountdown);
+}
 function editCurrentWorkout() { if (currentWorkout) showCreate(currentWorkout); }
+
+// ── TIMER ─────────────────────────────────────────────────────
+const PHASE_COLORS = {
+  getready:  '#006666',
+  work:      '#E05E00',
+  rest:      '#7A2800',
+  roundrest: '#FAC821 ',
+  done:      '#006666'
+};
+
+const CIRCUMFERENCE = 2 * Math.PI * 108; // 678.6
+
+let timerSequence   = [];
+let timerIndex      = 0;
+let timerTimeLeft   = 0;
+let timerInterval   = null;
+let timerPaused     = false;
+let timerStartEpoch = 0;
+let noSleep         = null;
+
+function buildSequence(workout, countdown) {
+  const seq   = [];
+  const names = workout.exerciseNames;
+  seq.push({ type:'getready', duration:countdown, exercise:names[0], round:1 });
+  for (let r = 0; r < workout.rounds; r++) {
+    for (let e = 0; e < workout.exercises; e++) {
+      seq.push({ type:'work',  duration:workout.work,      exercise:names[e],     round:r+1 });
+      if (e < workout.exercises - 1)
+        seq.push({ type:'rest', duration:workout.rest,     exercise:names[e+1],   round:r+1 });
+    }
+    if (r < workout.rounds - 1)
+      seq.push({ type:'roundrest', duration:workout.roundRest, exercise:names[0], round:r+2 });
+  }
+  return seq;
+}
+
+function launchTimer(workout, countdown) {
+  timerSequence   = buildSequence(workout, countdown);
+  timerIndex      = 0;
+  timerPaused     = false;
+  timerStartEpoch = Date.now();
+  try { if (!noSleep) noSleep = new NoSleep(); noSleep.enable(); } catch(e) {}
+  showScreen('screen-timer');
+  loadPhase(0);
+  runTick();
+}
+
+function loadPhase(idx) {
+  if (idx >= timerSequence.length) { finishTimer(); return; }
+  const phase      = timerSequence[idx];
+  timerTimeLeft    = phase.duration;
+  const totalRounds = Math.max(...timerSequence.filter(p => p.type === 'work').map(p => p.round));
+
+  document.getElementById('screen-timer').style.background = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
+
+  // Dark text on yellow round rest, white on everything else
+  const textColor = phase.type === 'roundrest' ? '#1a1a1a' : 'rgba(255,255,255,0.65)';
+  const mainColor = phase.type === 'roundrest' ? '#1a1a1a' : '#ffffff';
+  const faintColor = phase.type === 'roundrest' ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.55)';
+  document.getElementById('timer-phase').style.color        = textColor;
+  document.getElementById('timer-number').style.color       = mainColor;
+  document.getElementById('timer-exercise-name').style.color = mainColor;
+  document.getElementById('timer-next-label').style.color   = faintColor;
+  document.getElementById('timer-round-info').style.color   = faintColor;
+  document.getElementById('timer-ring').style.stroke        = phase.type === 'roundrest' ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.85)';
+  document.querySelectorAll('.timer-btn').forEach(b => {
+    b.style.background   = phase.type === 'roundrest' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.15)';
+    b.style.borderColor  = phase.type === 'roundrest' ? 'rgba(0,0,0,0.2)'  : 'rgba(255,255,255,0.25)';
+    b.style.color        = mainColor;
+  });
+
+  const labels = { getready:'Get Ready', work:"Let's Go!", rest:'Rest', roundrest:'Round Rest' };
+  document.getElementById('timer-phase').textContent = labels[phase.type] || '';
+
+  const nextLabel = document.getElementById('timer-next-label');
+  const exName    = document.getElementById('timer-exercise-name');
+  const roundInfo = document.getElementById('timer-round-info');
+
+  if (phase.type === 'work') {
+    nextLabel.textContent = '';
+    exName.textContent    = phase.exercise;
+    roundInfo.textContent = `Round ${phase.round} of ${totalRounds}`;
+  } else if (phase.type === 'getready') {
+    nextLabel.textContent = 'Next Up';
+    exName.textContent    = phase.exercise;
+    roundInfo.textContent = 'Workout starts soon';
+  } else {
+    nextLabel.textContent = 'Next Up';
+    exName.textContent    = phase.exercise;
+    roundInfo.textContent = `Round ${phase.round} of ${totalRounds}`;
+  }
+
+  updateTimerDisplay(phase.duration, phase.duration);
+}
+
+function runTick() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (timerPaused) return;
+    timerTimeLeft--;
+    updateTimerDisplay(timerTimeLeft, timerSequence[timerIndex].duration);
+
+    // 3, 2, 1 — high beep; 0 — even higher beep
+    if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
+    if (timerTimeLeft === 0) {
+      timerBeep(1100);
+      setTimeout(() => {
+        timerIndex++;
+        if (timerIndex >= timerSequence.length) { clearInterval(timerInterval); finishTimer(); }
+        else { loadPhase(timerIndex); }
+      }, 600);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(timeLeft, total) {
+  document.getElementById('timer-number').textContent = timeLeft;
+  const offset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
+  document.getElementById('timer-ring').style.strokeDashoffset = offset;
+}
+
+function timerPause() {
+  timerPaused = !timerPaused;
+  document.getElementById('timer-pause-btn').textContent = timerPaused ? 'RESUME' : 'PAUSE';
+}
+
+function timerSkip() {
+  clearInterval(timerInterval);
+  timerBeep(1100);
+  timerIndex++;
+  if (timerIndex >= timerSequence.length) { finishTimer(); return; }
+  loadPhase(timerIndex);
+  runTick();
+}
+
+function timerStop() {
+  clearInterval(timerInterval);
+  try { if (noSleep) noSleep.disable(); } catch(e) {}
+  showScreen('screen-home');
+}
+
+function finishTimer() {
+  clearInterval(timerInterval);
+  try { if (noSleep) noSleep.disable(); } catch(e) {}
+  const elapsed = Math.round((Date.now() - timerStartEpoch) / 1000);
+  document.getElementById('done-time').textContent = formatTime(elapsed);
+  showScreen('screen-done');
+}
+
+function timerDone() { showScreen('screen-home'); }
+
+// ── TIMER BEEP ────────────────────────────────────────────────
+function timerBeep(freq) {
+  try {
+    const ctx  = getAudio();
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const dur = freq >= 1000 ? 0.4 : 0.15;
+    gain.gain.setValueAtTime(0.5, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + dur);
+  } catch(e) {}
+}
 
 // ── DELETE ────────────────────────────────────────────────────
 function openDeleteModal() {
@@ -857,7 +1159,17 @@ function selectCountdown(el) {
   el.classList.add('selected');
   qsCountdown = parseInt(el.dataset.val);
 }
-function startQuickWorkout() { alert('Timer coming next! 💪'); }
+function startQuickWorkout() {
+  const e  = +document.getElementById('qs-exercises').value;
+  const r  = +document.getElementById('qs-rounds').value;
+  const w  = +document.getElementById('qs-work').value * 5;
+  const rs = +document.getElementById('qs-rest').value * 5;
+  const rr = +document.getElementById('qs-roundrest').value * 5;
+  launchTimer({
+    exercises: e, rounds: r, work: w, rest: rs, roundRest: rr,
+    exerciseNames: Array.from({length: e}, (_, i) => `Exercise ${i + 1}`)
+  }, qsCountdown);
+}
 
 // ── HELPERS ───────────────────────────────────────────────────
 function calcTotal(w) { return calcTotalRaw(w.exercises, w.rounds, w.work, w.rest, w.roundRest); }
