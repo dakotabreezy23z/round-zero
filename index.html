@@ -859,7 +859,7 @@ const PHASE_COLORS = {
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 134; // 791.7
+const CIRCUMFERENCE = 2 * Math.PI * 142; // 791.7
 
 let timerSequence   = [];
 let timerIndex      = 0;
@@ -954,21 +954,16 @@ function runTick() {
     updateTimerDisplay(timerTimeLeft, timerSequence[timerIndex].duration);
 
     // 3, 2, 1 — high beep; 0 — even higher beep
-if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
-    
+    if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
     if (timerTimeLeft === 0) {
       timerBeep(1100);
-      
-      // Move these OUT of the setTimeout for an instant transition
-      timerIndex++;
-      if (timerIndex >= timerSequence.length) { 
-          clearInterval(timerInterval); 
-          finishTimer(); 
-      } else { 
-          loadPhase(timerIndex); // New phase starts immediately at the 0 mark
-      }
+      setTimeout(() => {
+        timerIndex++;
+        if (timerIndex >= timerSequence.length) { clearInterval(timerInterval); finishTimer(); }
+        else { loadPhase(timerIndex); }
+      }, 600);
     }
-
+  }, 1000);
 function updateTimerDisplay(timeLeft, total) {
   document.getElementById('timer-number').textContent = timeLeft;
   const offset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
