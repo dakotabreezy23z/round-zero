@@ -384,9 +384,9 @@
     margin: auto 0;
   }
   .timer-ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
-  .timer-ring-bg   { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 6; }
+  .timer-ring-bg   { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 8; }
   .timer-ring-progress {
-    fill: none; stroke: rgba(255,255,255,0.85); stroke-width: 6;
+    fill: none; stroke: rgba(255,255,255,0.85); stroke-width: 8;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.9s linear;
   }
@@ -641,8 +641,8 @@
   <div class="timer-phase" id="timer-phase">GET READY</div>
   <div class="timer-ring-wrap">
     <svg class="timer-ring-svg" viewBox="0 0 300 300">
-      <circle class="timer-ring-bg" cx="150" cy="150" r="120"/>
-      <circle class="timer-ring-progress" id="timer-ring" cx="150" cy="150" r="120"
+      <circle class="timer-ring-bg" cx="150" cy="150" r="145"/>
+      <circle class="timer-ring-progress" id="timer-ring" cx="150" cy="150" r="145"
         stroke-dasharray="791.7" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-number" id="timer-number">5</div>
@@ -862,7 +862,7 @@ const PHASE_COLORS = {
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 120; // 791.7
+const CIRCUMFERENCE = 2 * Math.PI * 145; // 791.7
 
 let timerSequence   = [];
 let timerIndex      = 0;
@@ -970,11 +970,20 @@ function runTick() {
 }
 
 function updateTimerDisplay(timeLeft, total) {
-  document.getElementById('timer-number').textContent = timeLeft;
-  const offset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
-  document.getElementById('timer-ring').style.strokeDashoffset = offset;
-}
+  // 1. Only show the number if it is 1 or higher
+  if (timeLeft > 0) {
+    document.getElementById('timer-number').textContent = timeLeft;
+  }
 
+  // 2. Clamp the ring math so it doesn't "over-rotate" past 12 o'clock
+  const percentage = total > 0 ? timeLeft / total : 0;
+  const rawOffset = CIRCUMFERENCE * (1 - percentage);
+  
+  // Math.min/Math.max keeps the ring perfectly at the finish line when at 0
+  const clampedOffset = Math.min(CIRCUMFERENCE, Math.max(0, rawOffset));
+  
+  document.getElementById('timer-ring').style.strokeDashoffset = clampedOffset;
+}
 function timerPause() {
   timerPaused = !timerPaused;
   document.getElementById('timer-pause-btn').textContent = timerPaused ? 'RESUME' : 'PAUSE';
