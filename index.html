@@ -970,18 +970,19 @@ function runTick() {
 }
 
 function updateTimerDisplay(timeLeft, total) {
-  // 1. Only show the number if it is 1 or higher
+  // Only show the number if it is 1 or higher
   if (timeLeft > 0) {
     document.getElementById('timer-number').textContent = timeLeft;
   }
 
-  // 2. Clamp the ring math so it doesn't "over-rotate" past 12 o'clock
-  const percentage = total > 0 ? timeLeft / total : 0;
-  const rawOffset = CIRCUMFERENCE * (1 - percentage);
-  
-  // Math.min/Math.max keeps the ring perfectly at the finish line when at 0
+  // 1. Calculate the raw offset
+  const rawOffset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
+
+  // 2. CLAMP IT: This forces the ring to stop EXACTLY at the top
+  // Math.max(0, ...) prevents it from going "past" 12 o'clock
+  // Math.min(CIRCUMFERENCE, ...) prevents it from overlapping
   const clampedOffset = Math.min(CIRCUMFERENCE, Math.max(0, rawOffset));
-  
+
   document.getElementById('timer-ring').style.strokeDashoffset = clampedOffset;
 }
 function timerPause() {
