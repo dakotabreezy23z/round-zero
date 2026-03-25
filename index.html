@@ -289,10 +289,6 @@
     background: var(--white);
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    border: 15px solid transparent; /* The invisible hitbox */
-    background-clip: padding-box;   /* Keeps the color ONLY in the center */
-    cursor: pointer;
-}
   }
 
   /* ── COUNTDOWN OPTIONS ── */
@@ -318,8 +314,8 @@
   /* ── CREATE INPUTS ── */
   .ex-input {
     background: none; border: none; outline: none;
-    color: var(--white); font-family: 'Anton', sans-serif;
-    font-size: 18px; font-weight: 800; letter-spacing: 1.2px;
+    color: var(--white); font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px; font-weight: 800; letter-spacing: 1.5px;
     text-transform: uppercase; flex: 1; width: 100%;
   }
   .ex-input::placeholder { color: var(--faint); }
@@ -331,7 +327,7 @@
     padding: 16px 20px;
     color: var(--white);
     font-family: 'anton', sans-serif;
-    font-size: 22px; font-weight: 800; letter-spacing: 1.2px;
+    font-size: 22px; font-weight: 800; letter-spacing: 1px;
     text-transform: uppercase; outline: none; text-align: center;
   }
   .create-name-input::placeholder { color: var(--faint); }
@@ -912,7 +908,6 @@ function loadPhase(idx) {
   const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
   document.getElementById('screen-timer').style.background = phaseColor;
   document.body.style.background = phaseColor;
-}
 
   // Dark text on yellow round rest, white on everything else
   const textColor = phase.type === 'roundrest' ? '#1a1a1a' : 'rgba(255,255,255,0.65)';
@@ -975,19 +970,18 @@ function runTick() {
 }
 
 function updateTimerDisplay(timeLeft, total) {
-  // Only show the number if it is 1 or higher
+  // 1. Only show the number if it is 1 or higher
   if (timeLeft > 0) {
     document.getElementById('timer-number').textContent = timeLeft;
   }
 
-  // 1. Calculate the raw offset
-  const rawOffset = CIRCUMFERENCE * (1 - (total > 0 ? timeLeft / total : 0));
-
-  // 2. CLAMP IT: This forces the ring to stop EXACTLY at the top
-  // Math.max(0, ...) prevents it from going "past" 12 o'clock
-  // Math.min(CIRCUMFERENCE, ...) prevents it from overlapping
+  // 2. Clamp the ring math so it doesn't "over-rotate" past 12 o'clock
+  const percentage = total > 0 ? timeLeft / total : 0;
+  const rawOffset = CIRCUMFERENCE * (1 - percentage);
+  
+  // Math.min/Math.max keeps the ring perfectly at the finish line when at 0
   const clampedOffset = Math.min(CIRCUMFERENCE, Math.max(0, rawOffset));
-
+  
   document.getElementById('timer-ring').style.strokeDashoffset = clampedOffset;
 }
 function timerPause() {
