@@ -912,23 +912,6 @@ function loadPhase(idx) {
   const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
   document.getElementById('screen-timer').style.background = phaseColor;
   document.body.style.background = phaseColor;
- // 1. Target the moving ring
-  const ring = document.getElementById('timer-ring');
-  
-  // 2. Kill the transition so the reset is invisible and instant
-  ring.style.transition = 'none'; 
-  
-  // 3. Reset the ring to the "Full" position (the start of the circle)
-  ring.style.strokeDashoffset = '0'; 
-
-  // 4. Force the browser to acknowledge the change immediately
-  void ring.offsetWidth; 
-
-  // 5. Put the transition back on so it can animate the countdown normally
-  ring.style.transition = 'stroke-dashoffset 0.9s linear';
-
-  // 6. Update the display one last time for the new phase duration
-  updateTimerDisplay(timerTimeLeft, phase.duration);
 }
 
   // Dark text on yellow round rest, white on everything else
