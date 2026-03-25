@@ -376,7 +376,7 @@
   }
   .timer-ring-wrap {
     position: relative;
-    width: 320px; height: 320px;
+    width: 300px; height: 300px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
@@ -638,8 +638,8 @@
   <div class="timer-phase" id="timer-phase">GET READY</div>
   <div class="timer-ring-wrap">
     <svg class="timer-ring-svg" viewBox="0 0 280 280">
-      <circle class="timer-ring-bg" cx="140" cy="140" r="144"/>
-      <circle class="timer-ring-progress" id="timer-ring" cx="140" cy="140" r="144"
+      <circle class="timer-ring-bg" cx="150" cy="150" r="144"/>
+      <circle class="timer-ring-progress" id="timer-ring" cx="150" cy="150" r="144"
         stroke-dasharray="791.7" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-number" id="timer-number">5</div>
@@ -859,7 +859,7 @@ const PHASE_COLORS = {
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 144; // 791.7
+const CIRCUMFERENCE = 2 * Math.PI * 142; // 791.7
 
 let timerSequence   = [];
 let timerIndex      = 0;
