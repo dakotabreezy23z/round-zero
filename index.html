@@ -286,11 +286,11 @@
     -webkit-appearance: none;
     width: 35px; height: 10px;
     border-radius: 6px;
+    border: 10px solid transparent; /* The invisible hitbox */
+    background-clip: padding-box;   /* Keeps the color ONLY in the center */
     background: var(--white);
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
-    border: 10px solid transparent; /* The invisible hitbox */
-    background-clip: padding-box;   /* Keeps the color ONLY in the center */
   }
 
   /* ── COUNTDOWN OPTIONS ── */
