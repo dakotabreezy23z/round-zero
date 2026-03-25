@@ -613,8 +613,8 @@
     <div class="slider-group">
       <div class="slider-label">Countdown</div>
       <div class="countdown-options">
-        <div class="countdown-opt selected" data-val="5" onclick="selectCountdown(this)">5s</div>
-        <div class="countdown-opt" data-val="10" onclick="selectCountdown(this)">10s</div>
+        <div class="countdown-opt" data-val="5" onclick="selectCountdown(this)">5s</div>
+        <div class="countdown-opt selected" data-val="10" onclick="selectCountdown(this)">10s</div>
         <div class="countdown-opt" data-val="15" onclick="selectCountdown(this)">15s</div>
       </div>
     </div>
@@ -742,7 +742,10 @@ const BUILT_IN = [
   {id:'core3',name:'Core 3',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Russian Twist','Plank Pull Through','Windmill','Side Bend','Sit Up & Press']},
   {id:'fullbody1',name:'Full Body 1',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Swing','Goblet Squat','Push Press','Bent Over Row','Turkish Get Up']},
   {id:'fullbody2',name:'Full Body 2',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Deadlift','Push Press','Single Arm Row','Goblet Squat','High Pull','Russian Twist']},
-  {id:'fullbody3',name:'Full Body 3',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Clean','Push Press','Lunge','Windmill']}
+  {id:'fullbody3',name:'Full Body 3',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Clean','Push Press','Lunge','Windmill']},
+  {id:'hybrid1', name:'Hybrid 1', exercises:6, rounds:4, work:40, rest:20, roundRest:60,exerciseNames:['KB Swings', 'Pushups', 'Goblet Squats', 'Mountain Climbers', 'KB Clean & Press', 'Plank']},
+  {id:'hybrid2', name:'Hybrid 2', exercises:5, rounds:5, work:30, rest:15, roundRest:45,exerciseNames:['Burpees', 'KB Snatch', 'Walking Lunges', 'KB Gorilla Rows', 'Hollow Body Hold']},
+  {id:'hybrid3', name:'Hybrid 3', exercises:4, rounds:6, work:20, rest:10, roundRest:30,exerciseNames:['KB Thrusters', 'Jump Squats', 'KB American Swings', 'Dips']}
 ];
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -752,7 +755,7 @@ let currentWorkout = null;
 let detailFromScreen = 'screen-library';
 let editingWorkoutId = null;
 let editingIsBuiltIn = false;
-let qsCountdown = 5;
+let qsCountdown = 10;
 
 function saveFavorites() { localStorage.setItem('rz_favorites', JSON.stringify(favorites)); }
 function saveCustom() { localStorage.setItem('rz_custom', JSON.stringify(customWorkouts)); }
