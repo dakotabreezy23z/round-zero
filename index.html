@@ -135,7 +135,7 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    background: var(--teal);
+    background: #007a7a;
   }
   .header-title {
     font-size: 44px;
@@ -193,13 +193,12 @@
   .die-dot:nth-child(1) { grid-column:1; grid-row:1; }
   .die-dot:nth-child(2) { grid-column:2; grid-row:2; }
   .die-dot:nth-child(3) { grid-column:3; grid-row:3; }
-  .random-label { font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
-
+  .random-label { font-size: 18px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
   /* ── WORKOUT LIST ── */
   .workout-list { padding: 0 20px 48px; display: flex; flex-direction: column; gap: 10px; }
   .workout-card { padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .workout-card-name { font-size: 20px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-  .workout-card-meta { font-size: 13px; color: var(--faint); margin-top: 3px; font-family: 'Barlow', sans-serif; }
+  .workout-card-name { font-size: 20px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; }
+  .workout-card-meta { font-size: 13px; color: var(--faint); margin-top: 3px; font-family: 'Barlow', sans-serif; font-weight: 400; }
   .workout-card-right { display: flex; align-items: center; gap: 12px; }
   .star-btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 4px; color: var(--white); transition: transform 0.12s; }
   .star-btn:active { transform: scale(1.35); }
@@ -211,13 +210,13 @@
   /* ── DETAIL ── */
   .detail-params { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
   .param-row { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
-  .param-label { font-size: 14px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--faint); }
-  .param-value { font-size: 18px; font-weight: 800; letter-spacing: 1px; }
-  .detail-exercises-title { padding: 0 20px 10px; font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--faint); }
+  .param-label { font-size: 14px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; color: var(--faint); }
+  .param-value { font-size: 18px; font-weight: 400; letter-spacing: 1px; }
+  .detail-exercises-title { padding: 0 20px 10px; font-size: 13px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--faint); }
   .exercise-list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .exercise-row { padding: 16px 20px; display: flex; align-items: center; gap: 16px; }
-  .exercise-num { font-size: 14px; font-weight: 600; color: var(--faint); width: 20px; text-align: center; }
-  .exercise-name { font-size: 18px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+  .exercise-num { font-size: 14px; font-weight: 400; color: var(--faint); width: 20px; text-align: center; }
+  .exercise-name { font-size: 18px; font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase; }
   .detail-total { text-align: center; padding: 14px; font-size: 15px; color: var(--faint); font-family: 'Barlow', sans-serif; }
   .detail-actions { padding: 0 20px 48px; display: flex; flex-direction: column; gap: 12px; }
 
@@ -229,10 +228,10 @@
     border: 1.5px solid var(--card-border);
     border-radius: 16px;
     padding: 20px;
-    font-size: 18px; font-weight: 900; letter-spacing: 4px;
+    font-size: 17px; font-weight: 400; letter-spacing: 4px;
     text-transform: uppercase;
     cursor: pointer;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: 'Anton', sans-serif;
     transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.1s;
   }
   .btn-start:active { background: var(--white); color: var(--teal); border-color: var(--white); transform: scale(0.97); }
@@ -243,11 +242,11 @@
     color: var(--white);
     border: 1.5px solid var(--card-border);
     border-radius: 16px;
-    padding: 18px;
-    font-size: 16px; font-weight: 700; letter-spacing: 3px;
+    padding: 20px;
+    font-size: 17px; font-weight: 400; letter-spacing: 4px;
     text-transform: uppercase;
     cursor: pointer;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: 'Anton', sans-serif;
     transition: background 0.12s, transform 0.1s;
   }
   .btn-secondary:active { background: var(--card-active); transform: scale(0.97); }
@@ -258,11 +257,11 @@
     color: var(--danger);
     border: 1.5px solid var(--danger);
     border-radius: 16px;
-    padding: 18px;
-    font-size: 16px; font-weight: 700; letter-spacing: 3px;
+    padding: 20px;
+    font-size: 17px; font-weight: 400; letter-spacing: 4px;
     text-transform: uppercase;
     cursor: pointer;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: 'Anton', sans-serif;
     transition: background 0.12s, transform 0.1s;
   }
   .btn-danger:active { background: rgba(255,68,68,0.15); transform: scale(0.97); }
@@ -271,9 +270,9 @@
   .setup-body { padding: 8px 24px 16px; }
   .setup-footer { padding: 0 24px 48px; }
   .slider-group { margin-bottom: 28px; }
-  .slider-label { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--faint); text-align: center; margin-bottom: 4px; }
-  .slider-value { font-size: 36px; font-weight: 900; color: var(--white); text-align: center; line-height: 1.1; margin-bottom: 10px; }
-  .slider-value span { font-size: 18px; font-weight: 600; color: var(--faint); margin-left: 2px; }
+  .slider-label { font-size: 13px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--faint); text-align: center; margin-bottom: 4px; }
+  .slider-value { font-size: 36px; font-weight: 400; color: var(--white); text-align: center; line-height: 1.1; margin-bottom: 10px; }
+  .slider-value span { font-size: 18px; font-weight: 400; color: var(--faint); margin-left: 2px; }
 
   input[type="range"] {
     -webkit-appearance: none;
@@ -300,10 +299,10 @@
     padding: 14px 8px;
     text-align: center;
     cursor: pointer;
-    font-size: 18px; font-weight: 800; letter-spacing: 1px;
+    font-size: 18px; font-weight: 400; letter-spacing: 1px;
     color: var(--faint);
     transition: all 0.12s;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: 'Anton', sans-serif;
   }
   .countdown-opt:active { transform: scale(0.96); }
   .countdown-opt.selected { background: var(--white); color: var(--teal); border-color: var(--white); }
@@ -349,7 +348,7 @@
     border-top: 1.5px solid var(--card-border);
   }
   .modal-overlay.open .modal-sheet { transform: translateY(0); }
-  .modal-title { font-size: 22px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+  .modal-title { font-size: 22px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
   .modal-sub { font-size: 14px; color: var(--faint); text-align: center; font-family: 'Barlow', sans-serif; margin-bottom: 28px; }
   .modal-btns { display: flex; flex-direction: column; gap: 10px; }
 
@@ -377,7 +376,7 @@
   }
   .timer-ring-wrap {
     position: relative;
-    width: 240px; height: 240px;
+    width: 280px; height: 280px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
@@ -389,7 +388,7 @@
     transition: stroke-dashoffset 0.9s linear;
   }
   .timer-number {
-    font-size: 96px; font-weight: 400; color: var(--white);
+    font-size: 120px; font-weight: 400; color: var(--white);
     line-height: 1; text-align: center; position: relative; z-index: 1;
   }
   .timer-exercise {
@@ -638,10 +637,10 @@
 <div id="screen-timer" class="screen">
   <div class="timer-phase" id="timer-phase">GET READY</div>
   <div class="timer-ring-wrap">
-    <svg class="timer-ring-svg" viewBox="0 0 240 240">
-      <circle class="timer-ring-bg" cx="120" cy="120" r="108"/>
-      <circle class="timer-ring-progress" id="timer-ring" cx="120" cy="120" r="108"
-        stroke-dasharray="678.6" stroke-dashoffset="0"/>
+    <svg class="timer-ring-svg" viewBox="0 0 280 280">
+      <circle class="timer-ring-bg" cx="140" cy="140" r="126"/>
+      <circle class="timer-ring-progress" id="timer-ring" cx="140" cy="140" r="126"
+        stroke-dasharray="791.7" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-number" id="timer-number">5</div>
   </div>
@@ -856,11 +855,11 @@ const PHASE_COLORS = {
   getready:  '#006666',
   work:      '#E05E00',
   rest:      '#7A2800',
-  roundrest: '#FAC821 ',
+  roundrest: '#FCD435',
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 108; // 678.6
+const CIRCUMFERENCE = 2 * Math.PI * 126; // 791.7
 
 let timerSequence   = [];
 let timerIndex      = 0;
@@ -903,7 +902,9 @@ function loadPhase(idx) {
   timerTimeLeft    = phase.duration;
   const totalRounds = Math.max(...timerSequence.filter(p => p.type === 'work').map(p => p.round));
 
-  document.getElementById('screen-timer').style.background = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
+  const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
+  document.getElementById('screen-timer').style.background = phaseColor;
+  document.body.style.background = phaseColor;
 
   // Dark text on yellow round rest, white on everything else
   const textColor = phase.type === 'roundrest' ? '#1a1a1a' : 'rgba(255,255,255,0.65)';
@@ -988,18 +989,23 @@ function timerSkip() {
 function timerStop() {
   clearInterval(timerInterval);
   try { if (noSleep) noSleep.disable(); } catch(e) {}
+  document.body.style.background = 'var(--teal)';
   showScreen('screen-home');
 }
 
 function finishTimer() {
   clearInterval(timerInterval);
   try { if (noSleep) noSleep.disable(); } catch(e) {}
+  document.body.style.background = PHASE_COLORS.done;
   const elapsed = Math.round((Date.now() - timerStartEpoch) / 1000);
   document.getElementById('done-time').textContent = formatTime(elapsed);
   showScreen('screen-done');
 }
 
-function timerDone() { showScreen('screen-home'); }
+function timerDone() {
+  document.body.style.background = 'var(--teal)';
+  showScreen('screen-home');
+}
 
 // ── TIMER BEEP ────────────────────────────────────────────────
 function timerBeep(freq) {
