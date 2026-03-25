@@ -383,12 +383,12 @@
     width: 300px; height: 300px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    margin: auto 0;
+    margin: 12px;
   }
   .timer-ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
-  .timer-ring-bg   { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 8; }
+  .timer-ring-bg   { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 6; }
   .timer-ring-progress {
-    fill: none; stroke: rgba(255,255,255,0.85); stroke-width: 8;
+    fill: none; stroke: rgba(255,255,255,0.85); stroke-width: 6;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.9s linear;
   }
@@ -645,7 +645,7 @@
     <svg class="timer-ring-svg" viewBox="0 0 300 300">
       <circle class="timer-ring-bg" cx="150" cy="150" r="145"/>
       <circle class="timer-ring-progress" id="timer-ring" cx="150" cy="150" r="145"
-        stroke-dasharray="791.7" stroke-dashoffset="0"/>
+        stroke-dasharray="911.06" stroke-dashoffset="0"/>
     </svg>
     <div class="timer-number" id="timer-number">5</div>
   </div>
