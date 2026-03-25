@@ -896,16 +896,17 @@ function launchTimer(workout, countdown) {
   runTick();
 }
 
-function loadPhase(idx) {
-  if (idx >= timerSequence.length) { finishTimer(); return; }
-  const phase      = timerSequence[idx];
-  timerTimeLeft    = phase.duration;
-  const totalRounds = Math.max(...timerSequence.filter(p => p.type === 'work').map(p => p.round));
+const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
 
-  const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
-  document.getElementById('screen-timer').style.background = phaseColor;
-  document.body.style.background = phaseColor;
+  // 1. Apply to the very top level of the document to prevent rotation gaps
+  document.documentElement.style.backgroundColor = phaseColor; 
+  document.body.style.backgroundColor = phaseColor;
 
+  // 2. Update the browser/OS theme color for the status bar
+  let metaThemeColor = document.querySelector("meta[name='theme-color']");
+  if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", phaseColor);
+  }
   // Dark text on yellow round rest, white on everything else
   const textColor = phase.type === 'roundrest' ? '#1a1a1a' : 'rgba(255,255,255,0.65)';
   const mainColor = phase.type === 'roundrest' ? '#1a1a1a' : '#ffffff';
