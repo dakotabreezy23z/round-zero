@@ -15,9 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; cursor: pointer; }
-  body { font-family: 'Anton', sans-serif; min-height: 100dvh; display: flex; flex-direction: row; background: #009999; }
-  #app { flex: 1; display: flex; flex-direction: column; min-height: 100dvh; }
-  
+
   :root {
     --teal: #009999;
     --card: rgba(255,255,255,0.12);
@@ -27,9 +25,6 @@
     --faint: rgba(255,255,255,0.55);
     --danger: #FF4444;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   html, body {
     height: 100%;
     font-family: 'Anton', sans-serif;
@@ -59,7 +54,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 55px 28px 52px;
+    padding: 80px 28px 52px;
   }
   .home-logo {
     font-size: 45px;
@@ -107,7 +102,7 @@
     position: relative;
     top: 0;
     z-index: 10;
-    background: #009999;
+    background: var(--teal);
   }
   .header-title {
     font-size: 44px;
@@ -206,10 +201,7 @@
     font-family: 'Anton', sans-serif;
     transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.1s;
   }
-  .background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 18px 24px;:active { background: var(--white); color: var(--teal); border-color: var(--white); transform: scale(0.97); }
+  .btn-start:active { background: var(--white); color: var(--teal); border-color: var(--white); transform: scale(0.97); }
 
   .btn-secondary {
     width: 100%;
@@ -697,8 +689,6 @@ function updateThemeColor() {
   const isLandscape = window.innerWidth > window.innerHeight;
   const color = isLandscape ? currentScreenColor : '#009999';
   document.getElementById('theme-color-meta').setAttribute('content', color);
-  document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
-    ?.setAttribute('content', 'black-translucent');
 }
 
 window.addEventListener('resize', updateThemeColor);
@@ -799,7 +789,7 @@ const PHASE_COLORS = {
   done:      '#006666'
 };
 
-const CIRCUMFERENCE = 2 * Math.PI * 145; // 791.7
+const CIRCUMFERENCE = 2 * Math.PI * 145; // 911.06
 
 let timerSequence   = [];
 let timerIndex      = 0;
@@ -845,6 +835,7 @@ function loadPhase(idx) {
   const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
   document.getElementById('screen-timer').style.background = phaseColor;
   document.body.style.background = phaseColor;
+  document.documentElement.style.background = phaseColor;
   currentScreenColor = phaseColor;
   updateThemeColor();
 
@@ -941,6 +932,7 @@ function timerStop() {
   clearInterval(timerInterval);
   try { if (noSleep) noSleep.disable(); } catch(e) {}
   document.body.style.background = 'var(--teal)';
+  document.documentElement.style.background = 'var(--teal)';
   currentScreenColor = '#009999';
   updateThemeColor();
   showScreen('screen-home');
@@ -957,6 +949,7 @@ function finishTimer() {
 
 function timerDone() {
   document.body.style.background = 'var(--teal)';
+  document.documentElement.style.background = 'var(--teal)';
   currentScreenColor = '#009999';
   updateThemeColor();
   showScreen('screen-home');
