@@ -54,7 +54,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 80px 28px 52px;
+    padding: 100px 28px 52px;
   }
   .home-logo {
     font-size: 45px;
@@ -630,7 +630,7 @@ function sliderBeep() {
     osc.connect(gain); gain.connect(ctx.destination);
     osc.type = 'sine';
     osc.frequency.value = 180;
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.setValueAtTime(0.06, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + 0.07);
@@ -798,16 +798,17 @@ let timerInterval   = null;
 let timerPaused     = false;
 let timerStartEpoch = 0;
 let noSleep         = null;
+let activeWorkout   = null;
 
 function buildSequence(workout, countdown) {
   const seq   = [];
   const names = workout.exerciseNames;
-  seq.push({ type:'getready', duration:countdown, exercise:names[0], round:1 });
+  seq.push({ type:'getready', duration:countdown, exercise:names[0], round:1, exerciseIndex:0 });
   for (let r = 0; r < workout.rounds; r++) {
     for (let e = 0; e < workout.exercises; e++) {
-      seq.push({ type:'work',  duration:workout.work,      exercise:names[e],     round:r+1 });
+      seq.push({ type:'work',  duration:workout.work,  exercise:names[e],   round:r+1, exerciseIndex:e });
       if (e < workout.exercises - 1)
-        seq.push({ type:'rest', duration:workout.rest,     exercise:names[e+1],   round:r+1 });
+        seq.push({ type:'rest', duration:workout.rest, exercise:names[e+1], round:r+1, exerciseIndex:e+1 });
     }
     if (r < workout.rounds - 1)
       seq.push({ type:'roundrest', duration:workout.roundRest, exercise:names[0], round:r+2 });
@@ -817,6 +818,7 @@ function buildSequence(workout, countdown) {
 
 function launchTimer(workout, countdown) {
   timerSequence   = buildSequence(workout, countdown);
+  activeWorkout   = workout;
   timerIndex      = 0;
   timerPaused     = false;
   timerStartEpoch = Date.now();
@@ -865,7 +867,7 @@ function loadPhase(idx) {
   if (phase.type === 'work') {
     nextLabel.textContent = '';
     exName.textContent    = phase.exercise;
-    roundInfo.textContent = `Round ${phase.round} of ${totalRounds}`;
+    roundInfo.textContent = `Round ${phase.round} of ${totalRounds}  ·  Exercise ${phase.exerciseIndex + 1} of ${activeWorkout.exercises}`;
   } else if (phase.type === 'getready') {
     nextLabel.textContent = 'Next Up';
     exName.textContent    = phase.exercise;
