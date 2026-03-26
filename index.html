@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Round Zero">
+<meta name="theme-color" content="#009999" id="theme-color-meta">
 <title>Round Zero</title>
 <link rel="apple-touch-icon" sizes="180x180" href="logo.jpg">
 <link rel="icon" type="image/png" sizes="32x32" href="logo.jpg">
@@ -96,34 +97,6 @@
   .home-btn-title { font-size: 22px; font-weight: 300; letter-spacing: 3px; color: var(--white); text-transform: uppercase; }
   .home-btn-sub { font-size: 13px; color: var(--faint); font-family: 'Barlow', sans-serif; }
   .home-btn-arrow { color: var(--faint); font-size: 22px; }
-
-  /* ── SELECT WORKOUT (Quick Start sub-screen) ── */
-  #screen-select {
-    display: flex;
-    flex-direction: column;
-  }
-  .select-menu {
-    padding: 8px 20px 48px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .select-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: background 0.12s, transform 0.1s;
-  }
-  .select-btn:active { background: var(--card-active); transform: scale(0.98); }
-  .select-btn-left { display: flex; flex-direction: column; gap: 4px; }
-  .select-btn-title { font-size: 28px; font-weight: 900; letter-spacing: 4px; color: var(--white); text-transform: uppercase; }
-  .select-btn-sub { font-size: 13px; color: var(--faint); font-family: 'Barlow', sans-serif; }
-  .select-btn-arrow { color: var(--faint); font-size: 24px; }
 
   /* ── HEADER ── */
   .header {
@@ -356,9 +329,6 @@
   .modal-sub { font-size: 14px; color: var(--faint); text-align: center; font-family: 'Barlow', sans-serif; margin-bottom: 28px; }
   .modal-btns { display: flex; flex-direction: column; gap: 10px; }
 
-  /* coming soon modal */
-  .coming-soon-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
-
   /* ── TIMER SCREEN ── */
   #screen-timer {
     display: flex;
@@ -468,10 +438,10 @@
   <div class="home-logo">ROUND ZERO</div>
   <div class="home-sub">KETTLEBELL TIMER</div>
   <div class="home-menu">
-    <div class="home-btn" ontouchstart="unlockAudio()" onclick="showScreen('screen-select')">
+    <div class="home-btn" ontouchstart="unlockAudio()" onclick="showScreen('screen-quickstart')">
       <div class="home-btn-left">
         <div class="home-btn-title">Quick Start</div>
-        <div class="home-btn-sub">Interval · E.M.O.M. · Calisthenics</div>
+        <div class="home-btn-sub">Interval timer</div>
       </div>
       <div class="home-btn-arrow">›</div>
     </div>
@@ -495,38 +465,6 @@
         <div class="home-btn-sub">Build a custom workout</div>
       </div>
       <div class="home-btn-arrow">›</div>
-    </div>
-  </div>
-</div>
-
-<!-- SELECT WORKOUT TYPE -->
-<div id="screen-select" class="screen">
-  <div class="header">
-    <button class="header-back" onclick="showScreen('screen-home')">‹</button>
-    <div class="header-title">Quick Start</div>
-    <div style="width:40px"></div>
-  </div>
-  <div class="select-menu">
-    <div class="select-btn" onclick="showScreen('screen-quickstart')">
-      <div class="select-btn-left">
-        <div class="select-btn-title">Interval</div>
-        <div class="select-btn-sub">Work · Rest · Repeat</div>
-      </div>
-      <div class="select-btn-arrow">›</div>
-    </div>
-    <div class="select-btn" onclick="showComingSoon('E.M.O.M.')">
-      <div class="select-btn-left">
-        <div class="select-btn-title">E.M.O.M.</div>
-        <div class="select-btn-sub">Every Minute On the Minute</div>
-      </div>
-      <div class="select-btn-arrow">›</div>
-    </div>
-    <div class="select-btn" onclick="showComingSoon('Calisthenics')">
-      <div class="select-btn-left">
-        <div class="select-btn-title">Calisthenics</div>
-        <div class="select-btn-sub">Bodyweight training</div>
-      </div>
-      <div class="select-btn-arrow">›</div>
     </div>
   </div>
 </div>
@@ -580,7 +518,7 @@
 <!-- INTERVAL SETUP (Quick Start) -->
 <div id="screen-quickstart" class="screen">
   <div class="header">
-    <button class="header-back" onclick="showScreen('screen-select')">‹</button>
+    <button class="header-back" onclick="showScreen('screen-home')">‹</button>
     <div class="header-title">Interval</div>
     <div style="width:40px"></div>
   </div>
@@ -681,16 +619,6 @@
   </div>
 </div>
 
-<!-- COMING SOON MODAL -->
-<div class="modal-overlay" id="coming-soon-modal">
-  <div class="modal-sheet" style="text-align:center">
-    <div class="coming-soon-icon">🚧</div>
-    <div class="modal-title" id="coming-soon-title">Coming Soon</div>
-    <div class="modal-sub" id="coming-soon-sub"></div>
-    <button class="btn-secondary" onclick="closeComingSoon()">Got It</button>
-  </div>
-</div>
-
 <script>
 // ── AUDIO ─────────────────────────────────────────────────────
 let audioCtx = null;
@@ -762,22 +690,26 @@ function saveCustom() { localStorage.setItem('rz_custom', JSON.stringify(customW
 function allWorkouts() { return [...BUILT_IN, ...customWorkouts]; }
 function isBuiltIn(id) { return BUILT_IN.some(w => w.id === id); }
 
+// ── THEME COLOR ───────────────────────────────────────────────
+let currentScreenColor = '#009999';
+
+function updateThemeColor() {
+  const isLandscape = window.innerWidth > window.innerHeight;
+  const color = isLandscape ? currentScreenColor : '#009999';
+  document.getElementById('theme-color-meta').setAttribute('content', color);
+  document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')
+    ?.setAttribute('content', 'black-translucent');
+}
+
+window.addEventListener('resize', updateThemeColor);
+window.addEventListener('orientationchange', updateThemeColor);
+
 // ── NAV ───────────────────────────────────────────────────────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   el.classList.add('active');
   el.scrollTop = 0;
-}
-
-// ── COMING SOON ───────────────────────────────────────────────
-function showComingSoon(name) {
-  document.getElementById('coming-soon-title').textContent = name;
-  document.getElementById('coming-soon-sub').textContent = `${name} mode is on its way. Check back soon!`;
-  document.getElementById('coming-soon-modal').classList.add('open');
-}
-function closeComingSoon() {
-  document.getElementById('coming-soon-modal').classList.remove('open');
 }
 
 // ── LIBRARY ───────────────────────────────────────────────────
@@ -913,6 +845,8 @@ function loadPhase(idx) {
   const phaseColor = PHASE_COLORS[phase.type] || PHASE_COLORS.work;
   document.getElementById('screen-timer').style.background = phaseColor;
   document.body.style.background = phaseColor;
+  currentScreenColor = phaseColor;
+  updateThemeColor();
 
   // Dark text on yellow round rest, white on everything else
   const textColor = phase.type === 'roundrest' ? '#1a1a1a' : 'rgba(255,255,255,0.65)';
@@ -1007,6 +941,8 @@ function timerStop() {
   clearInterval(timerInterval);
   try { if (noSleep) noSleep.disable(); } catch(e) {}
   document.body.style.background = 'var(--teal)';
+  currentScreenColor = '#009999';
+  updateThemeColor();
   showScreen('screen-home');
 }
 
@@ -1021,6 +957,8 @@ function finishTimer() {
 
 function timerDone() {
   document.body.style.background = 'var(--teal)';
+  currentScreenColor = '#009999';
+  updateThemeColor();
   showScreen('screen-home');
 }
 
