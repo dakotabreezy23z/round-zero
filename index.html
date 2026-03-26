@@ -640,15 +640,19 @@ function sliderBeep() {
 
     const now = ctx.currentTime;
 
+    // waveform (soft but defined)
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(1000, now);
-    osc.frequency.exponentialRampToValueAtTime(500, now + 0.02);
 
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+    // quick pitch drop (this is what makes it feel like a "tick")
+    osc.frequency.setValueAtTime(1200, now);
+    osc.frequency.exponentialRampToValueAtTime(700, now + 0.012);
+
+    // super short envelope
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.012);
 
     osc.start(now);
-    osc.stop(now + 0.02);
+    osc.stop(now + 0.012);
 
   } catch (e) {}
 }
