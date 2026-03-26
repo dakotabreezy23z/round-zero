@@ -59,14 +59,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: calc(env(safe-area-inset-top, 0px) + 15px) 28px 52px;
+    padding: calc(env(safe-area-inset-top, 0px) + 150px) 28px 52px;
   }
   .home-logo {
     font-size: 45px;
     display: flex;
     flex-direction: column;
     font-weight: 650;
-    letter-spacing: 8px;
+    letter-spacing: 14px;
     color: var(--white);
     text-align: center;
     line-height: 0.92;
@@ -952,6 +952,8 @@ function finishTimer() {
   clearInterval(timerInterval);
   try { if (noSleep) noSleep.disable(); } catch(e) {}
   document.body.style.background = PHASE_COLORS.done;
+  document.documentElement.style.background = PHASE_COLORS.done;
+  document.getElementById('status-fill').style.background = PHASE_COLORS.done;
   const elapsed = Math.round((Date.now() - timerStartEpoch) / 1000);
   document.getElementById('done-time').textContent = formatTime(elapsed);
   showScreen('screen-done');
