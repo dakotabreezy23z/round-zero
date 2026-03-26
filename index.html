@@ -25,7 +25,12 @@
     --faint: rgba(255,255,255,0.55);
     --danger: #FF4444;
   }
-  html, body {
+  html {
+    height: 100%;
+    background: var(--teal);
+  }
+
+  body {
     height: 100%;
     font-family: 'Anton', sans-serif;
     background: var(--teal);
@@ -424,7 +429,7 @@
 </style>
 </head>
 <body>
-<div id="status-fill" style="position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#009999;z-index:999;pointer-events:none;"></div>
+<div id="status-fill" style="position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,54px);background:#009999;z-index:999;pointer-events:none;transition:background 0.35s ease;"></div>
 
 <!-- HOME -->
 <div id="screen-home" class="screen active">
