@@ -604,7 +604,7 @@
     <div class="diff-dots" id="detail-difficulty"></div>
   </div>
   <div class="detail-actions">
-    <button class="btn-start" onclick="startWorkout()">START</button>
+    <button class="btn-start" ontouchstart="unlockAudio()" onclick="startWorkout()">START</button>
     <button class="btn-secondary" onclick="editCurrentWorkout()">EDIT</button>
     <button class="btn-danger" id="detail-delete-btn" onclick="openDeleteModal()">DELETE</button>
   </div>
@@ -781,79 +781,79 @@ const BUILT_IN = [
   // ARMS
   {id:'arms1',name:'Arm Assault',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Curl','Hammer Curl','Tricep Extension','Overhead Tricep','Skull Crusher']},
   {id:'arms2',name:'Bicep Blast',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Single Arm Curl','Skull Crusher','Concentration Curl','Hammer Curl','Tricep Kickback','Reverse Curl']},
-  {id:'arms3',name:'Gun Show',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Hammer Curl','Tricep Kickback','Reverse Curl','Close Grip Press','Overhead Tricep']},
+  {id:'arms3',name:'Tricep & Bicep Burn',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Hammer Curl','Tricep Kickback','Reverse Curl','Close Grip Press','Overhead Tricep']},
 
   // BACK
   {id:'back1',name:'Back Batallion',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Deadlift','Bent Over Row','Good Morning','Single Arm Row','Reverse Fly']},
   {id:'back2',name:'Posterior Power',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Single Arm Row','Romanian Deadlift','Reverse Fly','Shrug','Renegade Row','Good Morning']},
-  {id:'back3',name:'The Big Pull',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Deadlift','Renegade Row','Good Morning','Bent Over Row']},
+  {id:'back3',name:'Back & Row Rig',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Deadlift','Renegade Row','Good Morning','Bent Over Row']},
 
   // CALISTHENICS
-  {id:'cali1',name:'Bodyweight Brawl',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Push-ups','Air Squats','Plank','Lunges','Dips','Mountain Climbers']},
-  {id:'cali2',name:'Gravity Defier',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Burpees','Pull-ups','Hollow Body Hold','Glute Bridges','Diamond Push-ups','Jumping Jacks']},
-  {id:'cali3',name:'Urban Athlete',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Pike Push-ups','Archer Squats','Superman Hold','Leg Raises','Wide Push-ups','Wall Sit']},
+  {id:'cali1',name:'Cali Bodyweight Brawl',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Push-ups','Air Squats','Plank','Lunges','Dips','Mountain Climbers']},
+  {id:'cali2',name:'Cali Gravity Defier',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Burpees','Pull-ups','Hollow Body Hold','Glute Bridges','Diamond Push-ups','Jumping Jacks']},
+  {id:'cali3',name:'Cali Skill & Strength',exercises:6,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Pike Push-ups','Archer Squats','Superman Hold','Leg Raises','Wide Push-ups','Wall Sit']},
 
   // CARDIO KB
-  {id:'cardio1',name:'Kettlebell Kicker',exercises:12,rounds:2,work:45,rest:15,roundRest:60,exerciseNames:['Swings','Goblet Squats','Clean & Press (R)','Clean & Press (L)','Reverse Lunges','Bent Over Rows','Halos','Side Bends','High Knees','Plank','Mountain Climbers','Glute Bridges']},
-  {id:'cardio2',name:'The Engine Room',exercises:10,rounds:3,work:40,rest:10,roundRest:30,exerciseNames:['Single Arm Swing (R)','Single Arm Swing (L)','Push Press (R)','Push Press (L)','Snatch (R)','Snatch (L)','Windmill (R)','Windmill (L)','Thrusters','Burpees']},
-  {id:'cardio3',name:'Iron Cardio',exercises:8,rounds:3,work:60,rest:15,roundRest:45,exerciseNames:['Swings','Goblet Squats','Overhead Press','Reverse Lunges','Clean','Halo','Deadlift','Plank']},
+  {id:'cardio1',name:'Cardio KB Kicker',exercises:12,rounds:2,work:45,rest:15,roundRest:60,exerciseNames:['Swings','Goblet Squats','Clean & Press (R)','Clean & Press (L)','Reverse Lunges','Bent Over Rows','Halos','Side Bends','High Knees','Plank','Mountain Climbers','Glute Bridges']},
+  {id:'cardio2',name:'Cardio KB Engine',exercises:10,rounds:3,work:40,rest:10,roundRest:30,exerciseNames:['Single Arm Swing (R)','Single Arm Swing (L)','Push Press (R)','Push Press (L)','Snatch (R)','Snatch (L)','Windmill (R)','Windmill (L)','Thrusters','Burpees']},
+  {id:'cardio3',name:'Cardio KB Flow',exercises:8,rounds:3,work:60,rest:15,roundRest:45,exerciseNames:['Swings','Goblet Squats','Overhead Press','Reverse Lunges','Clean','Halo','Deadlift','Plank']},
 
   // CORE
   {id:'core1',name:'Core Crusher',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Russian Twist','Windmill','Sit Up & Press','Halo','Side Bend']},
   {id:'core2',name:'Abs of Steel',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Halo','Side Bend','Dead Bug','Turkish Get Up','Russian Twist','Plank Pull Through']},
   {id:'core3',name:'Midsection Mayhem',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Russian Twist','Plank Pull Through','Windmill','Side Bend','Sit Up & Press']},
-  {id:'core4',name:'Iron Pillar',exercises:5,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Plank','Side Plank (R)','Side Plank (L)','Bird-Dog','Hollow Body Hold']},
-  {id:'core5',name:'The Stabilizer',exercises:6,rounds:4,work:40,rest:20,roundRest:45,exerciseNames:['L-Sit Progression','Superman Hold','V-Sit','Dead Bug','Glute Bridge Hold','Plank']},
-  {id:'core6',name:'Dynamic Shred',exercises:5,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Leg Raises','Flutter Kicks','Mountain Climbers','Reverse Crunches','Plank Tap-outs']},
+  {id:'core4',name:'Core Stability Pillar',exercises:5,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Plank','Side Plank (R)','Side Plank (L)','Bird-Dog','Hollow Body Hold']},
+  {id:'core5',name:'Core Isometric Hold',exercises:6,rounds:4,work:40,rest:20,roundRest:45,exerciseNames:['L-Sit Progression','Superman Hold','V-Sit','Dead Bug','Glute Bridge Hold','Plank']},
+  {id:'core6',name:'Core Dynamic Shred',exercises:5,rounds:5,work:30,rest:15,roundRest:60,exerciseNames:['Leg Raises','Flutter Kicks','Mountain Climbers','Reverse Crunches','Plank Tap-outs']},
 
   // FULL BODY
-  {id:'fullbody1',name:'Total Body Terror',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Swing','Goblet Squat','Push Press','Bent Over Row','Turkish Get Up']},
-  {id:'fullbody2',name:'The Gauntlet',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Deadlift','Push Press','Single Arm Row','Goblet Squat','High Pull','Russian Twist']},
+  {id:'fullbody1',name:'Full Body Terror',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Swing','Goblet Squat','Push Press','Bent Over Row','Turkish Get Up']},
+  {id:'fullbody2',name:'Full Body Gauntlet',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Deadlift','Push Press','Single Arm Row','Goblet Squat','High Pull','Russian Twist']},
   {id:'fullbody3',name:'Full Body Fusion',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Clean','Push Press','Lunge','Windmill']},
 
   // HIIT
-  {id:'hiit1',name:'Heart Rate Havoc',exercises:5,rounds:6,work:20,rest:10,roundRest:60,exerciseNames:['Burpees','Mountain Climbers','High Knees','Jumping Jacks','Sprints']},
-  {id:'hiit2',name:'Metabolic Melt',exercises:6,rounds:5,work:30,rest:15,roundRest:45,exerciseNames:['Star Jumps','Skaters','Plank Jacks','Tuck Jumps','Bicycle Crunches','Spiderman Lunges']},
-  {id:'hiit3',name:'The Afterburner',exercises:5,rounds:4,work:40,rest:20,roundRest:60,exerciseNames:['Thrusters','Bear Crawl','Switch Lunges','Box Jumps','Shadow Boxing']},
+  {id:'hiit1',name:'HIIT Heart Havoc',exercises:5,rounds:6,work:20,rest:10,roundRest:60,exerciseNames:['Burpees','Mountain Climbers','High Knees','Jumping Jacks','Sprints']},
+  {id:'hiit2',name:'HIIT Metabolic Melt',exercises:6,rounds:5,work:30,rest:15,roundRest:45,exerciseNames:['Star Jumps','Skaters','Plank Jacks','Tuck Jumps','Bicycle Crunches','Spiderman Lunges']},
+  {id:'hiit3',name:'HIIT Afterburner',exercises:5,rounds:4,work:40,rest:20,roundRest:60,exerciseNames:['Thrusters','Bear Crawl','Switch Lunges','Box Jumps','Shadow Boxing']},
 
   // HYBRID
-  {id:'hybrid1',name:'The Chimera',exercises:6,rounds:4,work:40,rest:20,roundRest:60,exerciseNames:['KB Swings','Pushups','Goblet Squats','Mountain Climbers','KB Clean & Press','Plank']},
-  {id:'hybrid2',name:'Strength x Stamina',exercises:5,rounds:5,work:30,rest:15,roundRest:45,exerciseNames:['Burpees','KB Snatch','Walking Lunges','KB Gorilla Rows','Hollow Body Hold']},
-  {id:'hybrid3',name:'Conditioning Chaos',exercises:4,rounds:6,work:20,rest:10,roundRest:30,exerciseNames:['KB Thrusters','Jump Squats','KB American Swings','Dips']},
+  {id:'hybrid1',name:'Hybrid Chimera',exercises:6,rounds:4,work:40,rest:20,roundRest:60,exerciseNames:['KB Swings','Pushups','Goblet Squats','Mountain Climbers','KB Clean & Press','Plank']},
+  {id:'hybrid2',name:'Hybrid Strength x Stamina',exercises:5,rounds:5,work:30,rest:15,roundRest:45,exerciseNames:['Burpees','KB Snatch','Walking Lunges','KB Gorilla Rows','Hollow Body Hold']},
+  {id:'hybrid3',name:'Hybrid Chaos',exercises:4,rounds:6,work:20,rest:10,roundRest:30,exerciseNames:['KB Thrusters','Jump Squats','KB American Swings','Dips']},
 
   // LEGS
   {id:'legs1',name:'Leg Day Legend',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Goblet Squat','Romanian Deadlift','Swing','Lunge','Step Up']},
-  {id:'legs2',name:'Quad Quake',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Sumo Squat','Single Leg Deadlift','Lunge','Step Up','Swing','Jump Squat']},
-  {id:'legs3',name:'Glute Grinder',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Goblet Squat','Jump Squat','Romanian Deadlift','Sumo Squat']},
+  {id:'legs2',name:'Leg Quad Quake',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Sumo Squat','Single Leg Deadlift','Lunge','Step Up','Swing','Jump Squat']},
+  {id:'legs3',name:'Leg Glute Grinder',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Swing','Goblet Squat','Jump Squat','Romanian Deadlift','Sumo Squat']},
 
   // MOBILITY
-  {id:'mobi1',name:'Fluid Motion',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Cat-Cow','Bird-Dog','Worlds Greatest Stretch','90/90 Hip Switches','Thoracic Rotations','Deep Squat Hold']},
-  {id:'mobi2',name:'Joint Juice',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Scapular Shrugs','Cossack Squats','Downward Dog to Cobra','Wrist Carps','Shoulder Pass-throughs','Ankle Circles']},
-  {id:'mobi3',name:'Restoration Station',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Pigeon Pose (R)','Pigeon Pose (L)','Couch Stretch (R)','Couch Stretch (L)','Childs Pose','Standing Forward Fold']},
+  {id:'mobi1',name:'Mobility Fluid Motion',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Cat-Cow','Bird-Dog','Worlds Greatest Stretch','90/90 Hip Switches','Thoracic Rotations','Deep Squat Hold']},
+  {id:'mobi2',name:'Mobility Joint Juice',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Scapular Shrugs','Cossack Squats','Downward Dog to Cobra','Wrist Carps','Shoulder Pass-throughs','Ankle Circles']},
+  {id:'mobi3',name:'Mobility Restoration',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Pigeon Pose (R)','Pigeon Pose (L)','Couch Stretch (R)','Couch Stretch (L)','Childs Pose','Standing Forward Fold']},
 
   // PULL
   {id:'pull1',name:'Pull Party',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Single Arm Row','Renegade Row','High Pull','Bent Over Row','Snatch']},
-  {id:'pull2',name:'Vertical Vengeance',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Bent Over Row','Upright Row','Single Arm Row','Snatch','High Pull','Clean']},
-  {id:'pull3',name:'The Row Boat',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Clean','High Pull','Renegade Row','Single Arm Row','Bent Over Row']},
+  {id:'pull2',name:'Pull Vertical Vengeance',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Bent Over Row','Upright Row','Single Arm Row','Snatch','High Pull','Clean']},
+  {id:'pull3',name:'Pull Power Row',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Clean','High Pull','Renegade Row','Single Arm Row','Bent Over Row']},
 
   // PUSH
   {id:'push1',name:'Push Perfection',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Floor Press','Push Press','Single Arm Press','Tricep Extension','Chest Fly']},
-  {id:'push2',name:'Press Progress',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Push Press','Arnold Press','Close Grip Press','Chest Fly','Tricep Extension','Floor Press']},
-  {id:'push3',name:'Pectoral Pump',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Arnold Press','Push Press','Skull Crusher','Tricep Kickback','Single Arm Press']},
+  {id:'push2',name:'Push Press Progress',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Push Press','Arnold Press','Close Grip Press','Chest Fly','Tricep Extension','Floor Press']},
+  {id:'push3',name:'Push Pectoral Pump',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Arnold Press','Push Press','Skull Crusher','Tricep Kickback','Single Arm Press']},
 
   // SHOULDERS
-  {id:'shoulders1',name:'Boulder Shoulders',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Overhead Press','Lateral Raise','Front Raise','Arnold Press','Rear Delt Fly']},
-  {id:'shoulders2',name:'Deltoid Destroyer',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Arnold Press','Upright Row','Face Pull','Shrug','Lateral Raise','Push Press']},
+  {id:'shoulders1',name:'Shoulder Boulders',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Overhead Press','Lateral Raise','Front Raise','Arnold Press','Rear Delt Fly']},
+  {id:'shoulders2',name:'Shoulder Deltoid Destroyer',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Arnold Press','Upright Row','Face Pull','Shrug','Lateral Raise','Push Press']},
   {id:'shoulders3',name:'Shoulder Shrug-Off',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Push Press','Lateral Raise','Rear Delt Fly','Front Raise','Shrug']},
 
   // UNILATERAL
-  {id:'uni1',name:'Single Side Slayer',exercises:6,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Single Leg Squat (R)','Single Leg Squat (L)','Single Arm Row (R)','Single Arm Row (L)','Step Ups (R)','Step Ups (L)']},
-  {id:'uni2',name:'Isolation Station',exercises:6,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Single Arm Press (R)','Single Arm Press (L)','Single Leg Deadlift (R)','Single Leg Deadlift (L)','Lunge (R)','Lunge (L)']},
-  {id:'uni3',name:'One Side Only',exercises:4,rounds:6,work:30,rest:15,roundRest:45,exerciseNames:['Single Arm Snatch (R)','Single Arm Snatch (L)','Windmill (R)','Windmill (L)']},
+  {id:'uni1',name:'Unilateral Slayer',exercises:6,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Single Leg Squat (R)','Single Leg Squat (L)','Single Arm Row (R)','Single Arm Row (L)','Step Ups (R)','Step Ups (L)']},
+  {id:'uni2',name:'Unilateral Isolation',exercises:6,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Single Arm Press (R)','Single Arm Press (L)','Single Leg Deadlift (R)','Single Leg Deadlift (L)','Lunge (R)','Lunge (L)']},
+  {id:'uni3',name:'Unilateral Split',exercises:4,rounds:6,work:30,rest:15,roundRest:45,exerciseNames:['Single Arm Snatch (R)','Single Arm Snatch (L)','Windmill (R)','Windmill (L)']},
 
   // NEW ADDITIONS
-  {id:'power1',name:'Explosive Energy',exercises:4,rounds:5,work:20,rest:40,roundRest:90,exerciseNames:['Broad Jumps','Clapping Pushups','KB Snatch','Box Jumps']},
-  {id:'endurance1',name:'The Long Game',exercises:4,rounds:3,work:90,rest:30,roundRest:60,exerciseNames:['Farmer Carry','Plank Hold','Wall Sit','Goblet Squat (Light)']}
+  {id:'power1',name:'Power Explosive Energy',exercises:4,rounds:5,work:20,rest:40,roundRest:90,exerciseNames:['Broad Jumps','Clapping Pushups','KB Snatch','Box Jumps']},
+  {id:'endurance1',name:'Endurance Long Game',exercises:4,rounds:3,work:90,rest:30,roundRest:60,exerciseNames:['Farmer Carry','Plank Hold','Wall Sit','Goblet Squat (Light)']}
 ];
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -1080,6 +1080,7 @@ function buildSequence(workout, countdown) {
 }
 
 function launchTimer(workout, countdown) {
+  unlockAudio();
   timerSequence   = buildSequence(workout, countdown);
   activeWorkout   = workout;
   timerIndex      = 0;
