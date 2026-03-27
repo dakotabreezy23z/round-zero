@@ -416,7 +416,7 @@
   }
   .diff-dots { display: flex; gap: 5px; }
   .diff-dot {
-    width: 40px; height: 40px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     border: 1.5px solid rgba(255,255,255,0.45);
     background: transparent;
@@ -425,6 +425,7 @@
     flex-shrink: 0;
   }
   .diff-dot.filled { background: var(--white); border-color: var(--white); }
+  .diff-dot.large { width: 22px; height: 22px; border-width: 2px; }
 
   /* category pill on library cards */
   .workout-category {
@@ -478,6 +479,7 @@
     align-items: center;
     gap: 10px;
   }
+  .detail-difficulty .diff-dots { gap: 10px; }
   .detail-diff-label {
     font-size: 14px;
     font-weight: 400;
@@ -599,7 +601,6 @@
   <div class="exercise-list" id="detail-exercises"></div>
   <div class="detail-total" id="detail-total"></div>
   <div class="detail-difficulty">
-    <span class="detail-diff-label"></span>
     <div class="diff-dots" id="detail-difficulty"></div>
   </div>
   <div class="detail-actions">
@@ -1009,7 +1010,7 @@ function openDetail(id, fromScreen) {
   const diff = difficulties[w.id] || 0;
   const detailDiffEl = document.getElementById('detail-difficulty');
   detailDiffEl.innerHTML = [1,2,3,4,5].map(i =>
-    `<div class="detail-diff-dot diff-dot${i <= diff ? ' filled' : ''}" onclick="rateFromDetail(${i})"></div>`
+    `<div class="detail-diff-dot diff-dot large${i <= diff ? ' filled' : ''}" onclick="rateFromDetail(${i})"></div>`
   ).join('');
 
   // Delete only available on custom workouts
