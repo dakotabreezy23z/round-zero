@@ -640,11 +640,11 @@ function sliderBeep() {
 
     const now = ctx.currentTime;
 
-    osc.type = 'triangle';
+    osc.type = 'square';
     osc.frequency.setValueAtTime(1800, now);
     osc.frequency.exponentialRampToValueAtTime(500, now + 0.02);
 
-    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.setValueAtTime(0.1, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
     osc.start(now);
