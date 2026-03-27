@@ -633,10 +633,16 @@ function sliderBeep() {
     if (ctx.state === 'suspended') ctx.resume();
 
     const osc = ctx.createOscillator();
+    const filter = ctx.createBiquadFilter();
     const gain = ctx.createGain();
 
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(ctx.destination);
+
+    filter.type = 'highpass';
+    filter.frequency.value = 2000;
+    filter.Q.value = 0.5;
 
     const now = ctx.currentTime;
 
