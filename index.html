@@ -382,6 +382,11 @@
     font-family: 'Barlow', sans-serif; text-align: center;
     margin-top: 4px; letter-spacing: 0.5px;
   }
+  .timer-total-remaining {
+    font-size: 13px; color: rgba(255,255,255,0.4);
+    font-family: 'Barlow', sans-serif; text-align: center;
+    letter-spacing: 1px; margin-top: 2px;
+  }
   .timer-controls { display: flex; gap: 14px; width: 100%; }
   .timer-btn {
     flex: 1;
@@ -399,33 +404,37 @@
   .difficulty-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 5px;
   }
   .difficulty-label {
     font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: lowercase;
     color: var(--faint);
     font-family: 'Barlow', sans-serif;
+    font-weight: 400;
   }
-  .diff-dots {
-    display: flex;
-    gap: 6px;
-  }
+  .diff-dots { display: flex; gap: 5px; }
   .diff-dot {
-    width: 1px; height: 1px;
+    width: 14px; height: 14px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,0.5);
+    border: 1.5px solid rgba(255,255,255,0.45);
     background: transparent;
     transition: background 0.12s, border-color 0.12s;
     cursor: pointer;
     flex-shrink: 0;
   }
-  .diff-dot.filled {
-    background: var(--white);
-    border-color: var(--white);
+  .diff-dot.filled { background: var(--white); border-color: var(--white); }
+
+  /* category pill on library cards */
+  .workout-category {
+    font-size: 13px;
+    color: var(--faint);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
   }
+
+  /* total time remaining on timer — defined earlier, no duplicate needed */
+
 
   /* done screen difficulty */
   .done-difficulty {
@@ -447,7 +456,7 @@
     gap: 14px;
   }
   .done-diff-dot {
-    width: 22px; height: 22px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     border: 2px solid rgba(255,255,255,0.5);
     background: transparent;
@@ -674,6 +683,7 @@
     <div class="timer-next-label" id="timer-next-label">NEXT UP</div>
     <div class="timer-exercise-name" id="timer-exercise-name"></div>
     <div class="timer-round-info" id="timer-round-info"></div>
+    <div class="timer-total-remaining" id="timer-total-remaining"></div>
   </div>
   <div class="timer-controls">
     <button class="timer-btn" id="timer-pause-btn" onclick="timerPause()">PAUSE</button>
@@ -850,6 +860,18 @@ function saveDifficulties() { localStorage.setItem('rz_difficulties', JSON.strin
 function allWorkouts() { return [...BUILT_IN, ...customWorkouts]; }
 function isBuiltIn(id) { return BUILT_IN.some(w => w.id === id); }
 
+function getCategory(id) {
+  const map = {
+    push:'Push', pull:'Pull', legs:'Legs', arms:'Arms',
+    shoulders:'Shoulders', back:'Back', core:'Core',
+    fullbody:'Full Body', hybrid:'Hybrid', hiit:'HIIT',
+    cardio:'Cardio', mobi:'Mobility', cali:'Calisthenics',
+    uni:'Unilateral', power:'Power', endurance:'Endurance'
+  };
+  const prefix = (id || '').replace(/[0-9]/g, '');
+  return map[prefix] || null;
+}
+
 // ── DIFFICULTY ────────────────────────────────────────────────
 function rateDifficulty(val) {
   if (!currentWorkout) return;
@@ -903,6 +925,18 @@ function showScreen(id) {
   el.scrollTop = 0;
 }
 
+// ── CATEGORY ─────────────────────────────────────────────────
+const CATEGORY_MAP = {
+  arms:'Arms', back:'Back', cardio:'Cardio', cali:'Calisthenics',
+  core:'Core', endurance:'Endurance', fullbody:'Full Body', hiit:'HIIT',
+  hybrid:'Hybrid', legs:'Legs', mobi:'Mobility', power:'Power',
+  pull:'Pull', push:'Push', shoulders:'Shoulders', uni:'Unilateral'
+};
+function getCategory(id) {
+  const prefix = id.replace(/[0-9]+$/, '');
+  return CATEGORY_MAP[prefix] || 'Custom';
+}
+
 // ── LIBRARY ───────────────────────────────────────────────────
 function showLibrary() { renderList('library-list', allWorkouts(), 'screen-library'); showScreen('screen-library'); }
 function showFavorites() { renderList('favorites-list', allWorkouts().filter(w => favorites.includes(w.id)), 'screen-favorites'); showScreen('screen-favorites'); }
@@ -916,6 +950,7 @@ function renderList(containerId, workouts, fromScreen) {
   el.innerHTML = workouts.map(w => {
     const starred = favorites.includes(w.id);
     const diff = difficulties[w.id] || 0;
+    const cat = getCategory(w.id);
     const diffDots = [1,2,3,4,5].map(i =>
       `<div class="diff-dot${i <= diff ? ' filled' : ''}"></div>`
     ).join('');
@@ -923,7 +958,7 @@ function renderList(containerId, workouts, fromScreen) {
       <div class="workout-card card" onclick="openDetail('${w.id}','${fromScreen}')">
         <div style="flex:1">
           <div class="workout-card-name">${w.name}</div>
-          <div class="workout-card-meta">${w.rounds} rounds · ${w.exercises} exercises · ${formatTime(calcTotal(w))}</div>
+          <div class="workout-card-meta"><span class="workout-category">${cat} · </span>${w.rounds} rounds · ${w.exercises} exercises · ${formatTime(calcTotal(w))}</div>
           <div class="difficulty-row">
             <span class="difficulty-label">Difficulty</span>
             <div class="diff-dots">${diffDots}</div>
@@ -1067,6 +1102,7 @@ function loadPhase(idx) {
   document.getElementById('timer-exercise-name').style.color = mainColor;
   document.getElementById('timer-next-label').style.color   = faintColor;
   document.getElementById('timer-round-info').style.color   = faintColor;
+  document.getElementById('timer-total-remaining').style.color = faintColor;
   document.getElementById('timer-ring').style.stroke        = phase.type === 'roundrest' ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.85)';
   document.querySelectorAll('.timer-btn').forEach(b => {
     b.style.background   = phase.type === 'roundrest' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.15)';
@@ -1118,20 +1154,24 @@ function runTick() {
   }, 1000);
 }
 
+function calcRemainingTime() {
+  // time left in current phase + all future phases
+  const futureSum = timerSequence.slice(timerIndex + 1).reduce((a, p) => a + p.duration, 0);
+  return timerTimeLeft + futureSum;
+}
+
 function updateTimerDisplay(timeLeft, total) {
-  // 1. Only show the number if it is 1 or higher
   if (timeLeft > 0) {
     document.getElementById('timer-number').textContent = timeLeft;
   }
-
-  // 2. Clamp the ring math so it doesn't "over-rotate" past 12 o'clock
   const percentage = total > 0 ? timeLeft / total : 0;
   const rawOffset = CIRCUMFERENCE * (1 - percentage);
-  
-  // Math.min/Math.max keeps the ring perfectly at the finish line when at 0
   const clampedOffset = Math.min(CIRCUMFERENCE, Math.max(0, rawOffset));
-  
   document.getElementById('timer-ring').style.strokeDashoffset = clampedOffset;
+
+  // Total remaining
+  const remaining = calcRemainingTime();
+  document.getElementById('timer-total-remaining').textContent = remaining > 0 ? `${formatTime(remaining)} remaining` : '';
 }
 function timerPause() {
   timerPaused = !timerPaused;
