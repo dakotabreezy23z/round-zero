@@ -395,6 +395,87 @@
   }
   .timer-btn:active { background: rgba(255,255,255,0.28); transform: scale(0.97); }
 
+  /* ── DIFFICULTY ── */
+  .difficulty-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .difficulty-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-family: 'Barlow', sans-serif;
+  }
+  .diff-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .diff-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    background: transparent;
+    transition: background 0.12s, border-color 0.12s;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .diff-dot.filled {
+    background: var(--white);
+    border-color: var(--white);
+  }
+
+  /* done screen difficulty */
+  .done-difficulty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .done-diff-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    font-family: 'Barlow', sans-serif;
+  }
+  .done-diff-dots {
+    display: flex;
+    gap: 14px;
+  }
+  .done-diff-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.5);
+    background: transparent;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    cursor: pointer;
+  }
+  .done-diff-dot.filled {
+    background: var(--white);
+    border-color: var(--white);
+  }
+  .done-diff-dot:active { transform: scale(0.88); }
+
+  /* detail screen difficulty */
+  .detail-difficulty {
+    padding: 0 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .detail-diff-label {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-family: 'Barlow', sans-serif;
+    width: 80px;
+  }
+
   /* ── DONE SCREEN ── */
   #screen-done {
     display: flex; flex-direction: column;
@@ -506,6 +587,10 @@
   <div class="detail-exercises-title">EXERCISES</div>
   <div class="exercise-list" id="detail-exercises"></div>
   <div class="detail-total" id="detail-total"></div>
+  <div class="detail-difficulty">
+    <span class="detail-diff-label">Difficulty</span>
+    <div class="diff-dots" id="detail-difficulty"></div>
+  </div>
   <div class="detail-actions">
     <button class="btn-start" onclick="startWorkout()">START</button>
     <button class="btn-secondary" onclick="editCurrentWorkout()">EDIT</button>
@@ -602,6 +687,16 @@
   <div class="done-label">Workout Complete</div>
   <div class="done-time" id="done-time">0:00</div>
   <div class="done-sub">total time</div>
+  <div class="done-difficulty" id="done-difficulty" style="display:none">
+    <div class="done-diff-label">Difficulty</div>
+    <div class="done-diff-dots" id="done-diff-dots">
+      <div class="done-diff-dot" onclick="rateDifficulty(1)"></div>
+      <div class="done-diff-dot" onclick="rateDifficulty(2)"></div>
+      <div class="done-diff-dot" onclick="rateDifficulty(3)"></div>
+      <div class="done-diff-dot" onclick="rateDifficulty(4)"></div>
+      <div class="done-diff-dot" onclick="rateDifficulty(5)"></div>
+    </div>
+  </div>
   <button class="done-btn" onclick="timerDone()">DONE</button>
 </div>
 
@@ -742,6 +837,7 @@ const BUILT_IN = [
 // ── STATE ─────────────────────────────────────────────────────
 let favorites = JSON.parse(localStorage.getItem('rz_favorites') || '[]');
 let customWorkouts = JSON.parse(localStorage.getItem('rz_custom') || '[]');
+let difficulties = JSON.parse(localStorage.getItem('rz_difficulties') || '{}');
 let currentWorkout = null;
 let detailFromScreen = 'screen-library';
 let editingWorkoutId = null;
@@ -750,8 +846,42 @@ let qsCountdown = 10;
 
 function saveFavorites() { localStorage.setItem('rz_favorites', JSON.stringify(favorites)); }
 function saveCustom() { localStorage.setItem('rz_custom', JSON.stringify(customWorkouts)); }
+function saveDifficulties() { localStorage.setItem('rz_difficulties', JSON.stringify(difficulties)); }
 function allWorkouts() { return [...BUILT_IN, ...customWorkouts]; }
 function isBuiltIn(id) { return BUILT_IN.some(w => w.id === id); }
+
+// ── DIFFICULTY ────────────────────────────────────────────────
+function rateDifficulty(val) {
+  if (!currentWorkout) return;
+  difficulties[currentWorkout.id] = val;
+  saveDifficulties();
+  renderDoneDots(val);
+  // refresh detail if we go back there
+}
+
+function renderDoneDots(rating) {
+  document.querySelectorAll('.done-diff-dot').forEach((dot, i) => {
+    dot.classList.toggle('filled', i < rating);
+  });
+}
+
+function renderDiffDots(id, rating, size) {
+  // size: 'small' for cards, 'detail' for detail screen
+  const dots = [1,2,3,4,5].map(i =>
+    `<div class="${size}-diff-dot diff-dot${i <= rating ? ' filled' : ''}" onclick="event.stopPropagation();rateFromDetail(${i})"></div>`
+  ).join('');
+  return dots;
+}
+
+function rateFromDetail(val) {
+  if (!currentWorkout) return;
+  difficulties[currentWorkout.id] = val;
+  saveDifficulties();
+  // re-render detail difficulty dots
+  document.querySelectorAll('.detail-diff-dot').forEach((dot, i) => {
+    dot.classList.toggle('filled', i < val);
+  });
+}
 
 // ── THEME COLOR ───────────────────────────────────────────────
 let currentScreenColor = '#009999';
@@ -785,11 +915,19 @@ function renderList(containerId, workouts, fromScreen) {
   }
   el.innerHTML = workouts.map(w => {
     const starred = favorites.includes(w.id);
+    const diff = difficulties[w.id] || 0;
+    const diffDots = [1,2,3,4,5].map(i =>
+      `<div class="diff-dot${i <= diff ? ' filled' : ''}"></div>`
+    ).join('');
     return `
       <div class="workout-card card" onclick="openDetail('${w.id}','${fromScreen}')">
         <div style="flex:1">
           <div class="workout-card-name">${w.name}</div>
           <div class="workout-card-meta">${w.rounds} rounds · ${w.exercises} exercises · ${formatTime(calcTotal(w))}</div>
+          <div class="difficulty-row">
+            <span class="difficulty-label">Difficulty</span>
+            <div class="diff-dots">${diffDots}</div>
+          </div>
         </div>
         <div class="workout-card-right">
           <button class="star-btn" onclick="event.stopPropagation();toggleStar('${w.id}','${containerId}','${fromScreen}')">${starred?'★':'☆'}</button>
@@ -829,6 +967,13 @@ function openDetail(id, fromScreen) {
   document.getElementById('detail-exercises').innerHTML = w.exerciseNames.map((n,i) =>
     `<div class="exercise-row card"><span class="exercise-num">${i+1}</span><span class="exercise-name">${n}</span></div>`).join('');
   document.getElementById('detail-total').textContent = `Total: ${formatTime(calcTotal(w))}`;
+
+  // Difficulty dots on detail screen
+  const diff = difficulties[w.id] || 0;
+  const detailDiffEl = document.getElementById('detail-difficulty');
+  detailDiffEl.innerHTML = [1,2,3,4,5].map(i =>
+    `<div class="detail-diff-dot diff-dot${i <= diff ? ' filled' : ''}" onclick="rateFromDetail(${i})"></div>`
+  ).join('');
 
   // Delete only available on custom workouts
   document.getElementById('detail-delete-btn').style.display = isBuiltIn(id) ? 'none' : '';
@@ -1021,6 +1166,16 @@ function finishTimer() {
   document.getElementById('status-fill').style.background = PHASE_COLORS.done;
   const elapsed = Math.round((Date.now() - timerStartEpoch) / 1000);
   document.getElementById('done-time').textContent = formatTime(elapsed);
+
+  // Show difficulty rating only for named workouts (not quick start)
+  const diffEl = document.getElementById('done-difficulty');
+  if (currentWorkout && currentWorkout.id) {
+    diffEl.style.display = 'flex';
+    renderDoneDots(difficulties[currentWorkout.id] || 0);
+  } else {
+    diffEl.style.display = 'none';
+  }
+
   showScreen('screen-done');
 }
 
