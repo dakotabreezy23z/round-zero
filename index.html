@@ -735,6 +735,15 @@ function getAudio() {
 function unlockAudio() {
   try { const c = getAudio(); if (c.state === 'suspended') c.resume(); } catch(e) {}
 }
+
+// Unlock on the very first touch anywhere — iOS requires a user gesture
+function unlockOnce() {
+  unlockAudio();
+  document.removeEventListener('touchstart', unlockOnce);
+  document.removeEventListener('mousedown', unlockOnce);
+}
+document.addEventListener('touchstart', unlockOnce, { passive: true });
+document.addEventListener('mousedown', unlockOnce);
 function sliderBeep() {
   try {
     const ctx = getAudio();
