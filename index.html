@@ -631,6 +631,7 @@ function sliderBeep() {
   try {
     const ctx = getAudio();
     if (ctx.state === 'suspended') ctx.resume();
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -639,26 +640,22 @@ function sliderBeep() {
 
     const now = ctx.currentTime;
 
-    // waveform (soft but defined)
-    osc.type = 'square';
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1000, now);
+    osc.frequency.exponentialRampToValueAtTime(500, now + 0.02);
 
-    // quick pitch drop (this is what makes it feel like a "tick")
-    osc.frequency.setValueAtTime(1500, now);
-    osc.frequency.exponentialRampToValueAtTime(700, now + 0.006);
-
-    // super short envelope
-    gain.gain.setValueAtTime(0.02, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.006);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
     osc.start(now);
-    osc.stop(now + 0.006);
+    osc.stop(now + 0.02);
 
   } catch (e) {}
 }
 
 // ── DATA ──────────────────────────────────────────────────────
 const BUILT_IN = [
-const workouts = [
+  const workouts = [
   {id:'arms1',name:'Arms 1',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Curl','Hammer Curl','Tricep Extension','Overhead Tricep','Skull Crusher']},
   {id:'arms2',name:'Arms 2',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Single Arm Curl','Skull Crusher','Concentration Curl','Hammer Curl','Tricep Kickback','Reverse Curl']},
   {id:'arms3',name:'Arms 3',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Hammer Curl','Tricep Kickback','Reverse Curl','Close Grip Press','Overhead Tricep']},
@@ -698,6 +695,7 @@ const workouts = [
   {id:'shoulders1',name:'Shoulders 1',exercises:5,rounds:4,work:45,rest:15,roundRest:60,exerciseNames:['Overhead Press','Lateral Raise','Front Raise','Arnold Press','Rear Delt Fly']},
   {id:'shoulders2',name:'Shoulders 2',exercises:6,rounds:4,work:45,rest:15,roundRest:45,exerciseNames:['Arnold Press','Upright Row','Face Pull','Shrug','Lateral Raise','Push Press']},
   {id:'shoulders3',name:'Shoulders 3',exercises:5,rounds:5,work:30,rest:10,roundRest:60,exerciseNames:['Push Press','Lateral Raise','Rear Delt Fly','Front Raise','Shrug']}
+];
 ];
 
 // ── STATE ─────────────────────────────────────────────────────
