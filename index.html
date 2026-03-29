@@ -520,6 +520,52 @@
     transition: background 0.12s, transform 0.1s;
   }
   .done-btn:active { background: rgba(255,255,255,0.28); transform: scale(0.97); }
+  /* ── EXERCISE INFO SCREEN ── */
+  #screen-exercise {
+    display: flex;
+    flex-direction: column;
+  }
+  .exercise-info-body {
+    padding: 8px 24px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .exercise-info-desc {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    background: var(--card);
+    border: 1.5px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .exercise-info-tip {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--faint);
+    font-family: 'Barlow', sans-serif;
+    background: var(--card);
+    border: 1.5px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .exercise-info-tip-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-family: 'Barlow', sans-serif;
+    margin-bottom: 8px;
+    display: block;
+  }
+  /* make exercise rows look tappable */
+  .exercise-row.tappable { cursor: pointer; }
+  .exercise-row.tappable:active { background: var(--card-active); transform: scale(0.98); }
+  .exercise-tap-hint { font-size: 16px; color: var(--faint); margin-left: auto; }
 </style>
 </head>
 <body>
@@ -711,6 +757,22 @@
     </div>
   </div>
   <button class="done-btn" onclick="timerDone()">DONE</button>
+</div>
+
+<!-- EXERCISE INFO -->
+<div id="screen-exercise" class="screen">
+  <div class="header">
+    <button class="header-back" id="exercise-back">‹</button>
+    <div class="header-title" id="exercise-title" style="font-size:28px;letter-spacing:3px;"></div>
+    <div style="width:40px"></div>
+  </div>
+  <div class="exercise-info-body">
+    <div class="exercise-info-desc" id="exercise-desc"></div>
+    <div class="exercise-info-tip" id="exercise-tip-wrap">
+      <span class="exercise-info-tip-label">💡 Tip</span>
+      <span id="exercise-tip"></span>
+    </div>
+  </div>
 </div>
 
 <!-- DELETE MODAL -->
@@ -938,6 +1000,192 @@ function showScreen(id) {
   el.scrollTop = 0;
 }
 
+// ── EXERCISE INFO ─────────────────────────────────────────────
+const EXERCISE_INFO = {
+  // ARMS
+  'curl':                   { desc: 'Stand holding a kettlebell in each hand, arms fully extended. Curl both weights up toward your shoulders, keeping your elbows pinned at your sides, then lower slowly back down.', tip: 'Avoid swinging — if you need momentum, drop the weight. The slower the negative (lowering), the more muscle you build.' },
+  'hammer curl':            { desc: 'Hold the kettlebells with a neutral grip (palms facing each other). Curl straight up without rotating your wrist. This hits the brachialis and brachioradialis alongside the bicep.', tip: 'Keep your wrists locked neutral the entire rep. Letting them rotate turns it into a regular curl.' },
+  'single arm curl':        { desc: 'Perform a bicep curl with one arm at a time. Keeping your free hand relaxed helps isolate the working arm and prevent compensating.', tip: 'Brace your non-working hand on your thigh or let it hang — just don\'t let it assist the lift.' },
+  'concentration curl':     { desc: 'Sit and brace your elbow against the inside of your thigh. Curl the weight up slowly, squeezing hard at the top. The braced elbow forces complete bicep isolation.', tip: 'Full extension at the bottom matters as much as the squeeze at the top. Don\'t cut the range of motion.' },
+  'reverse curl':           { desc: 'Hold the kettlebells with an overhand (pronated) grip and curl up. This shifts focus to the brachioradialis and forearms, which are often undertrained.', tip: 'Expect to use less weight than a standard curl — the forearms are a limiting factor here.' },
+  'tricep extension':       { desc: 'Hold a kettlebell overhead with both hands, elbows pointing forward. Lower the weight behind your head by bending at the elbows, then press back up.', tip: 'Keep your elbows pointing straight forward — flaring them out reduces tension on the tricep.' },
+  'overhead tricep':        { desc: 'A single-arm overhead tricep extension. Hold one kettlebell overhead, lower it behind your head, and press back to full extension.', tip: 'Brace your core and avoid arching your lower back. Use your free hand to steady your elbow if needed.' },
+  'skull crusher':          { desc: 'Lie on your back and hold kettlebells directly over your chest. Bend at the elbows to lower the weights toward your forehead, then press back up. Tricep-focused.', tip: 'The name says it all — control the descent. Don\'t let your elbows flare wide.' },
+  'tricep kickback':        { desc: 'Hinge at the hips with a flat back, upper arms parallel to the floor. Extend the kettlebell straight back until your arm is fully locked out, then return.', tip: 'The key is keeping your upper arm locked parallel to the floor throughout — if it drops, you\'ve lost the movement.' },
+  'close grip press':       { desc: 'Press both kettlebells together from your chest, keeping your elbows tucked close to your torso. The close grip maximizes tricep activation compared to a wider press.', tip: 'Think of pushing the kettlebells into each other as you press — this keeps tension in the right place.' },
+
+  // BACK
+  'bent over row':          { desc: 'Hinge forward at the hips with a flat back, knees slightly bent. Pull the kettlebell up toward your hip, leading with your elbow, then lower with control.', tip: 'Your back angle shouldn\'t change during the set. If you\'re standing up to pull, it\'s too heavy.' },
+  'single arm row':         { desc: 'With one hand braced on a bench or your knee, row the kettlebell up to your hip. Pulling to the hip (not the armpit) better activates the lats.', tip: 'Focus on driving your elbow back and up, not just lifting the weight. Think elbow, not hand.' },
+  'renegade row':           { desc: 'Start in a push-up position with hands on kettlebells. Row one kettlebell up while balancing on the other, alternating sides. This demands serious core stability.', tip: 'Wider feet = easier balance. Keep your hips square to the floor — don\'t rotate to compensate.' },
+  'high pull':              { desc: 'Swing the kettlebell up to shoulder height, then pull your elbow high and back as if starting a lawn mower. This combines a swing with an upright row.', tip: 'Let the swing generate the momentum — you\'re just directing it upward, not muscling it up.' },
+  'upright row':            { desc: 'Hold the kettlebells in front of your thighs and pull them straight up to chin height, leading with your elbows. Keep the weights close to your body throughout.', tip: 'Stop when your elbows are at shoulder height. Going higher can impinge the shoulder.' },
+  'reverse fly':            { desc: 'Hinge forward, arms hanging down. Raise both arms out to the sides like wings, squeezing your shoulder blades together at the top. Targets the rear deltoids.', tip: 'Use light weight — the rear delt is a small muscle. A slight bend in the elbows helps.' },
+  'shrug':                  { desc: 'Stand tall holding kettlebells at your sides. Shrug your shoulders straight up toward your ears, hold briefly at the top, then lower. Targets the upper traps.', tip: 'Straight up and down only. Rolling the shoulders can strain the joint.' },
+  'scapular shrugs':        { desc: 'In a dead hang or with arms extended, move only your shoulder blades — pull them down and together, then release. No arm bending. Pure scapular control.', tip: 'This is a small, controlled movement. Think of putting your shoulder blades in your back pockets.' },
+
+  // SHOULDERS
+  'overhead press':         { desc: 'Press both kettlebells from shoulder height straight overhead until your arms are fully locked out. Lower back to shoulders under control.', tip: 'Squeeze your glutes and brace your abs to protect your lower back from arching under the load.' },
+  'push press':             { desc: 'Use a slight knee dip to generate drive, then press the kettlebell overhead. The leg drive lets you move heavier weight than a strict press.', tip: 'The dip should be shallow and quick — not a squat. Use legs to start it, arm to finish it.' },
+  'arnold press':           { desc: 'Start with palms facing you at chin height. As you press overhead, rotate your palms forward so they face away at the top. Reverse on the way down. Hits all three delt heads.', tip: 'The rotation should be smooth and continuous throughout the press, not a snap at the top.' },
+  'lateral raise':          { desc: 'With arms at your sides and a soft elbow bend, raise the kettlebells out to the sides until your arms reach shoulder height. Controls the side deltoid.', tip: 'Lead with your pinky slightly higher than your thumb — it better isolates the lateral delt.' },
+  'front raise':            { desc: 'Hold the kettlebells in front of your thighs and raise them forward to shoulder height with straight arms. Targets the anterior (front) deltoid.', tip: 'Keep a slight bend in your elbows and avoid leaning back to compensate.' },
+  'rear delt fly':          { desc: 'Hinge forward at the hips. Raise the kettlebells out to the sides, squeezing your shoulder blades. Isolates the posterior deltoid and upper back.', tip: 'Lighter is better here. The rear delt is small and easy to cheat with back momentum.' },
+  'face pull':              { desc: 'With resistance at face height, pull toward your face with elbows flaring wide, finishing with hands beside your ears. Critical for shoulder health and posture.', tip: 'With a kettlebell, anchor a band and attach it, or substitute with a high cable if available.' },
+  'shoulder pass-throughs': { desc: 'Hold a stick or band with a wide grip and pass it overhead from front to back in a smooth arc. Improves shoulder mobility and opens the chest.', tip: 'The wider your grip, the easier. Work toward narrower grip over time as mobility improves.' },
+
+  // CHEST / PUSH
+  'floor press':            { desc: 'Lie on your back with kettlebells at chest level. Press up to full arm extension, then lower until your upper arms touch the floor. The floor limits range and reduces shoulder stress.', tip: 'Pause briefly when your triceps touch the floor — don\'t bounce off it.' },
+  'chest fly':              { desc: 'Lie on your back, arms extended above your chest with a slight elbow bend. Lower the kettlebells out to the sides in a wide arc, then bring them back together.', tip: 'Think of hugging a big tree — keep that curved arm shape the whole way. Don\'t let elbows lock out.' },
+  'push-ups':               { desc: 'From a high plank position, lower your chest to the floor keeping your body in a straight line, then press back up. Fundamental upper body and core strength builder.', tip: 'If standard push-ups are too hard, elevate your hands. If too easy, elevate your feet.' },
+  'diamond push-ups':       { desc: 'Place your hands close together forming a diamond shape with your thumbs and index fingers. This targets the triceps far more than standard push-ups.', tip: 'Keep your elbows tucked in close to your torso throughout the movement.' },
+  'wide push-ups':          { desc: 'Push-ups with hands placed wider than shoulder width. The wider stance increases chest activation and reduces tricep involvement compared to standard push-ups.', tip: 'Don\'t go too wide — it strains the shoulder joint. A fist-width outside shoulder is enough.' },
+  'pike push-ups':          { desc: 'Start in a downward dog position with hips high. Bend your elbows to lower the crown of your head toward the floor, then press back up. A bodyweight overhead press.', tip: 'The more vertical your torso, the more it mimics an overhead press. Walk your feet closer to increase difficulty.' },
+  'clapping pushups':       { desc: 'Explosive push-ups where you push hard enough to leave the ground, clap, and land with soft elbows. Develops upper body power and fast-twitch muscle.', tip: 'Land with your elbows already slightly bent to absorb the impact safely.' },
+  'dips':                   { desc: 'With hands on a surface behind you or parallel bars, lower your body by bending the elbows to roughly 90 degrees, then press back up. Targets triceps and chest.', tip: 'Keep your torso upright for more tricep focus. Lean forward to shift more load to the chest.' },
+  'pull-ups':               { desc: 'Hang from a bar with an overhand grip and pull yourself up until your chin clears the bar, then lower fully. Builds the lats, biceps, and grip.', tip: 'A full dead hang at the bottom on every rep maximizes range of motion and muscle recruitment.' },
+
+  // LEGS
+  'goblet squat':           { desc: 'Hold a kettlebell at your chest with both hands. Squat down keeping your torso upright, chest up, and knees tracking over your toes. Drive through your heels to stand.', tip: 'The weight at your chest acts as a counterbalance — use it to sit deeper than you normally could.' },
+  'sumo squat':             { desc: 'Take a wide stance with toes turned out. Hold a kettlebell between your legs and squat straight down, keeping your chest tall. Inner thigh and glute focused.', tip: 'Let your knees track in the direction your toes are pointing throughout the movement.' },
+  'romanian deadlift':      { desc: 'With soft knees and a flat back, hinge at the hips pushing them back as you lower the kettlebells along your legs. Feel the hamstring stretch, then drive hips forward to stand.', tip: 'This is a hip hinge, not a squat. Your knees barely move — the hips do all the work.' },
+  'deadlift':               { desc: 'With a kettlebell between your feet, hinge at the hips, grip the handle, and stand tall by driving through your heels and extending your hips. The king of posterior chain exercises.', tip: 'Think of pushing the floor away rather than pulling the weight up. Keep the bell close to your body.' },
+  'lunge':                  { desc: 'Step one foot forward and lower your back knee toward the floor, then return. Alternating legs or staying on one side. Builds quads, glutes, and single-leg stability.', tip: 'Keep your front shin vertical — if your knee shoots past your toes, shorten your step.' },
+  'reverse lunge':          { desc: 'Step backward instead of forward. This reduces knee stress compared to a forward lunge while hitting the same muscles. Great for those with knee sensitivity.', tip: 'Step far enough back that your front shin stays close to vertical at the bottom.' },
+  'step up':                { desc: 'Step onto a box or bench with one foot and drive through that heel to stand fully on top, then step back down. Excellent single-leg quad and glute builder.', tip: 'Don\'t push off the back foot — all the work should come from the front leg on the box.' },
+  'jump squat':             { desc: 'Perform a squat then explode off the floor at the top, landing softly with bent knees and immediately going into the next rep. Builds lower body power.', tip: 'Land toe-to-heel with knees bent to absorb force safely. Never land with locked knees.' },
+  'single leg squat':       { desc: 'Squat on one leg with the other extended forward or behind. Demands balance, hip strength, and quad control. One of the hardest bodyweight lower body movements.', tip: 'Use a counterweight (light kettlebell extended forward) to help balance as you build strength.' },
+  'single leg deadlift':    { desc: 'Balance on one leg and hinge forward, lowering the kettlebell while the free leg extends behind you as a counterbalance. Hammers the hamstring and glute of the standing leg.', tip: 'Keep your hips square to the floor. Letting one hip rise is cheating the movement.' },
+  'air squats':             { desc: 'A standard bodyweight squat. Feet shoulder-width, toes slightly out, chest tall. Lower until your thighs are at least parallel to the floor, then stand.', tip: 'Chest up, heels down, knees out. Three cues that fix most squat problems.' },
+  'cossack squats':         { desc: 'Take a wide stance and shift your weight to one side, squatting deep on that leg while the other stays straight with the heel on the floor. Extreme hip mobility work.', tip: 'Let the heel of the squatting leg stay on the ground. If your heel rises, widen your stance.' },
+  'archer squats':          { desc: 'Similar to a Cossack squat but deeper. One leg bends deeply while the other extends fully to the side. Combines strength and mobility.', tip: 'Use a support (wall or post) while learning. Depth will improve as hip mobility increases.' },
+  'switch lunges':          { desc: 'Jump lunges — start in a lunge, jump to switch leg positions mid-air, and land in a lunge on the opposite side. High-intensity plyometric leg work.', tip: 'Land softly each time. If impact bothers your joints, do alternating reverse lunges instead.' },
+  'walking lunges':         { desc: 'Step forward into a lunge, then bring the back foot up to meet the front before stepping into the next lunge. Continuous movement pattern covering ground.', tip: 'Keep your torso tall and your core braced — don\'t let the weight pull you forward.' },
+  'wall sit':               { desc: 'Slide down a wall until your thighs are parallel to the floor, knees at 90 degrees. Hold the position as long as possible. Isometric quad strength and endurance.', tip: 'Don\'t rest your hands on your knees — arms straight out in front to keep the quads working.' },
+  'glute bridges':          { desc: 'Lie on your back with knees bent and feet flat. Drive through your heels to lift your hips until your body forms a straight line from knees to shoulders. Squeeze at the top.', tip: 'Tuck your pelvis at the top to maximize glute activation. Don\'t just lift your hips — squeeze them.' },
+  'glute bridge hold':      { desc: 'A glute bridge held at the top position as an isometric contraction. Builds endurance in the glutes and teaches you to maintain hip extension under fatigue.', tip: 'Keep your abs braced and avoid letting your lower back overextend.' },
+
+  // CORE
+  'plank':                  { desc: 'Hold a straight-body position face-down on your forearms and toes. Your body should form a rigid plank from head to heels. Isometric core and shoulder stability.', tip: 'Squeeze everything — glutes, abs, quads. A plank is a full-body contraction, not just an ab exercise.' },
+  'side plank':             { desc: 'Balance on one forearm and the side of one foot, with your body in a straight line. Targets the obliques and lateral stabilizers that a regular plank misses.', tip: 'Stack your feet or stagger them for stability. Keep your hips lifted — don\'t sag.' },
+  'plank pull through':     { desc: 'In a high plank, reach under your body with one hand to drag a kettlebell from one side to the other. Resisting rotation while your arm moves is the core challenge.', tip: 'The wider your feet, the more stable you\'ll be. Fight hard to keep your hips square.' },
+  'plank tap-outs':         { desc: 'From a forearm plank, step your feet out wide and back in one at a time. The moving base of support constantly challenges your core to stay stable.', tip: 'Move your feet, not your hips. Keep the rest of your body completely still.' },
+  'plank jacks':            { desc: 'Start in a high plank and jump both feet out wide, then back together — like a jumping jack but horizontal. Combines core stability with cardio.', tip: 'If the jumping is too much, step feet in and out instead. Same core challenge, less impact.' },
+  'russian twist':          { desc: 'Sit with knees bent and torso leaning back at 45 degrees. Rotate side to side touching the kettlebell to the floor each rep. Builds rotational core strength.', tip: 'Lift your feet off the ground to increase difficulty — but only if you can keep your spine neutral.' },
+  'dead bug':               { desc: 'Lie on your back, arms and knees up at 90 degrees. Lower opposite arm and leg toward the floor while pressing your lower back into the ground, then return.', tip: 'The lower back must stay glued to the floor throughout. If it lifts, you\'ve gone too far.' },
+  'hollow body hold':       { desc: 'Lie on your back and compress everything — lower back pressed to the floor, arms and legs raised and extended, body forming a shallow dish shape. Advanced core stability.', tip: 'The further from your body your arms and legs are, the harder it gets. Start with bent knees.' },
+  'leg raises':             { desc: 'Lie flat, hands under your hips, and raise both legs to 90 degrees, then lower slowly without your feet touching the floor. Lower abs and hip flexor focused.', tip: 'If your lower back arches at the bottom, don\'t lower all the way — stop just before it does.' },
+  'flutter kicks':          { desc: 'Lie on your back with legs slightly off the floor. Alternate raising each leg in a small, rapid flutter motion. Constant tension on the lower abs and hip flexors.', tip: 'Press your lower back into the floor and breathe. Most people hold their breath — don\'t.' },
+  'reverse crunches':       { desc: 'Lie on your back and curl your knees toward your chest by lifting your hips off the floor, then slowly lower. This targets the lower abs by moving the pelvis rather than the ribcage.', tip: 'The lift comes from curling your pelvis, not swinging your legs. Small, controlled movement beats momentum.' },
+  'bicycle crunches':       { desc: 'Lie on your back and alternate bringing each elbow to the opposite knee in a pedaling motion. One of the most effective exercises for the full abdominal wall.', tip: 'Slow it down. Fast bicycle crunches are mostly neck strain. Controlled rotation is the point.' },
+  'sit up & press':         { desc: 'Hold a kettlebell at your chest and perform a sit-up. At the top, press the kettlebell overhead before lowering back down. Combines core and shoulder work.', tip: 'The press happens at the top of the sit-up — don\'t try to press on the way up.' },
+  'windmill':               { desc: 'Press a kettlebell overhead and hold it there. Hinge sideways, sliding your free hand down your leg while the kettlebell stays locked overhead. Requires shoulder stability and hip mobility.', tip: 'Keep your eyes on the kettlebell the whole time. Your arm must stay vertical.' },
+  'halo':                   { desc: 'Hold a kettlebell at chest height and circle it around your head in a smooth orbit, reversing direction each rep. Builds shoulder mobility and stability.', tip: 'Keep the circle tight around your head, not way out in front. Your head stays still, the bell moves.' },
+  'side bend':              { desc: 'Stand with a kettlebell in one hand at your side. Bend laterally toward that side, letting the weight pull you, then return to upright using your oblique. One side at a time.', tip: 'Don\'t rotate forward. This is a pure lateral bend — chest stays facing forward the entire time.' },
+  'bird-dog':               { desc: 'From hands and knees, extend the opposite arm and leg simultaneously, holding briefly, then return. Builds spinal stability and coordinates opposite-side movement.', tip: 'Move slow and pause at the top. If your hips rotate, you\'ve gone too far too fast.' },
+  'v-sit':                  { desc: 'Balance on your tailbone with legs and torso raised, forming a V shape with your body. A demanding isometric that tests hip flexors and core in one position.', tip: 'Keeping your back flat (not rounded) is the challenge. Bent knees make it easier while you build strength.' },
+  'l-sit progression':      { desc: 'A progression toward an L-sit — supporting your body weight on your hands with legs extended parallel to the floor. Builds extreme core and tricep strength.', tip: 'Start with feet on the floor in a dip position. Progress to tuck, then single-leg, then full L-sit.' },
+  'superman hold':          { desc: 'Lie face down and simultaneously raise your arms and legs off the floor, holding the top position. Targets the erector spinae and posterior chain.', tip: 'Focus on length — reach your hands and feet away from you, don\'t just crunch upward.' },
+
+  // KB SPECIFIC
+  'swing':                  { desc: 'Hinge at the hips explosively to drive the kettlebell from between your legs to shoulder height using your hips, not your arms. The foundational kettlebell movement.', tip: 'It\'s a hip hinge and snap — not a squat and lift. Your arms are just ropes attached to the weight.' },
+  'kb american swings':     { desc: 'Like a standard swing but the bell goes all the way overhead to full arm extension. Requires more shoulder stability and control at the top.', tip: 'Lock out completely overhead — don\'t stop at eye level. Make sure your shoulders are stable before going heavy.' },
+  'clean':                  { desc: 'Swing the kettlebell up and "catch" it in the rack position at your shoulder in one smooth movement. The bell should barely leave your palm — it rolls over the hand.', tip: 'A good clean is silent. If it\'s banging your wrist, you\'re muscling it up instead of guiding it.' },
+  'snatch':                 { desc: 'In one continuous movement, pull the kettlebell from between your legs all the way to a locked-out overhead position. The most technically demanding basic kettlebell movement.', tip: 'Punch your hand through the handle at the top so the bell rolls gently onto the back of your wrist.' },
+  'kb snatch':              { desc: 'Same as a snatch — a single explosive pull from the swing position to full overhead lockout. Tests power, timing, and shoulder stability simultaneously.', tip: 'Build to it from cleans and high pulls. Rushing the snatch before the timing is right leads to bruised wrists.' },
+  'clean & press':          { desc: 'Clean the kettlebell to the rack position, then press it overhead. A two-part movement that hits the full body from hips through shoulders.', tip: 'There should be a brief pause in rack before you press. Don\'t turn it into a push press by accident.' },
+  'kb clean & press':       { desc: 'A clean directly followed by a press — kettlebell from between the legs to shoulder rack, then driven overhead. One of the most complete kettlebell combinations.', tip: 'The clean and the press are two separate moves. Reset and breathe in rack before pressing.' },
+  'thrusters':              { desc: 'Front squat directly into an overhead press in one fluid motion — the power from the squat drives the press. A full-body conditioning exercise.', tip: 'Use the momentum from standing up to initiate the press. Timing the hip drive with the press is the key.' },
+  'kb thrusters':           { desc: 'Goblet squat immediately into a two-arm press, using hip drive from standing to power the overhead portion. High metabolic demand.', tip: 'The press should feel easy because your legs did most of the work. If it\'s grinding, your timing is off.' },
+  'turkish get up':         { desc: 'From lying down holding a kettlebell overhead, stand fully upright through a set sequence of positions — and reverse back to the floor. Tests strength, mobility, and coordination throughout.', tip: 'Eyes on the bell the entire time. Go slow — this is skill practice, not a conditioning exercise.' },
+  'renegade row':           { desc: 'In a push-up position with hands on kettlebells, row one side while the other stabilizes. One of the best combinations of core stability and pulling strength.', tip: 'The hip rotation is the enemy — wider feet and slower reps keep it honest.' },
+  'kb gorilla rows':        { desc: 'With two kettlebells between your feet in a hinged position, alternate rowing each one while the non-working hand holds the other bell for balance.', tip: 'Keep your hips level. The natural tendency is to rotate toward the working arm — resist it.' },
+  'farmer carry':           { desc: 'Pick up heavy kettlebells and walk for distance or time. Simple in concept, brutal in execution. Builds grip, traps, core, and mental toughness.', tip: 'Stay tall — don\'t let the weight pull you sideways. Walk with purpose, not a lean.' },
+  'high pull':              { desc: 'Swing the kettlebell to shoulder height, then sharply pull your elbow high and back. Combines the hip power of a swing with upper back engagement.', tip: 'The pull happens at the top of the swing when the bell is weightless — don\'t fight against momentum.' },
+
+  // CARDIO / HIIT
+  'burpees':                { desc: 'From standing, drop to a push-up position, perform a push-up, jump your feet forward, then jump up with arms overhead. Full body, high intensity.', tip: 'Scale by stepping instead of jumping, or removing the push-up. It\'s about sustained effort, not speed.' },
+  'mountain climbers':      { desc: 'In a high plank, rapidly drive alternate knees toward your chest in a running motion. Combines core stability with cardiovascular work.', tip: 'Keep your hips level and your core braced. Letting your hips bounce up defeats the purpose.' },
+  'high knees':             { desc: 'Run in place driving your knees up to hip height with each step. Arms pump opposite to legs. Pure cardio and hip flexor conditioning.', tip: 'It\'s the knee height that makes it effective — don\'t jog, drive those knees up.' },
+  'jumping jacks':          { desc: 'Jump both feet out while raising arms overhead, then jump back to standing with arms at sides. A classic warm-up and steady-state cardio movement.', tip: 'Keep a soft landing — cushion with bent knees each time your feet hit the floor.' },
+  'sprints':                { desc: 'All-out running effort for the duration of the interval. Maximum speed and intensity. Can be done in place (high knees) if space is limited.', tip: 'True sprinting is 90-100% effort. If you can do it for more than 20 seconds, you\'re not sprinting.' },
+  'skaters':                { desc: 'Leap laterally from one foot, landing on the opposite foot with a slight lean and a brief hold, then leap back. Mimics a speed-skater stride. Builds lateral power and balance.', tip: 'Reach the opposite hand toward the landing foot each rep to encourage balance and hip hinge.' },
+  'star jumps':             { desc: 'Jump explosively, spreading arms and legs wide into a star shape at peak height, then land softly with feet together. Maximum explosive effort.', tip: 'Swing your arms down before jumping to pre-load the movement and get more height.' },
+  'tuck jumps':             { desc: 'Jump as high as possible and tuck your knees toward your chest at the peak. Land softly and immediately repeat. High-intensity plyometric power builder.', tip: 'Land with bent knees and never on straight legs. Control the landing first, worry about height second.' },
+  'box jumps':              { desc: 'Jump onto a box or platform from standing, landing softly with both feet on top, then step down carefully. Develops explosive leg power.', tip: 'Step down, don\'t jump down. The eccentric landing from a box jump is where most injuries happen.' },
+  'broad jumps':            { desc: 'Jump as far forward as possible from a standing position, landing softly. Horizontal power output — pure lower body explosiveness measured in distance.', tip: 'Swing your arms and bend deeply before jumping. Land with bent knees and absorb the impact.' },
+  'shadow boxing':          { desc: 'Punch combinations in the air — jabs, crosses, hooks — while moving your feet. Builds cardio, coordination, and shoulder endurance in a fun format.', tip: 'Keep your hands up between punches and move your feet. Standing flat-footed makes it just arm waving.' },
+  'bear crawl':             { desc: 'On hands and feet with knees hovering just off the floor, move forward by stepping opposite hand and foot simultaneously. Full-body coordination and core stability.', tip: 'Keep your knees close to the floor and your hips low — don\'t pike up.' },
+  'spiderman lunges':       { desc: 'From a push-up position, step one foot to the outside of the same-side hand in a wide lunge. Alternate sides. Excellent hip flexor and thoracic mobility work.', tip: 'Try to get your foot as far forward as possible and drop your hips toward the floor.' },
+  'plank hold':             { desc: 'A sustained forearm plank held for the full work interval. Tests isometric core endurance and the ability to maintain tension under fatigue.', tip: 'Break it into mental chunks — count breaths. 10 slow breaths is roughly a minute.' },
+
+  // MOBILITY
+  'cat-cow':                { desc: 'On hands and knees, alternate between rounding your spine up (cat) and letting it sag down (cow). Warms up the entire spine and prepares it for loading.', tip: 'Move with your breath — exhale to round (cat), inhale to extend (cow). Slow and controlled.' },
+  '90/90 hip switches':     { desc: 'Sit with both legs in 90-degree angles to the side. Rotate through to switch to the other side, lowering both knees to the floor between transitions. Builds hip internal rotation.', tip: 'Use your hands for support at first. Try to minimize how much you need them as you improve.' },
+  'pigeon pose':            { desc: 'From downward dog, bring one knee forward toward the same-side wrist and lower to the floor. The front leg is folded, back leg extended. A deep hip flexor and glute stretch.', tip: 'Ease into it — don\'t force the hip to the floor. Comfort over depth, especially at first.' },
+  'couch stretch':          { desc: 'Kneel with one shin against a wall behind you, front foot on the floor. Upright torso. One of the most effective quad and hip flexor stretches.', tip: 'Squeeze the glute of the back leg to deepen the stretch. The tighter the hip flexor, the harder this will feel.' },
+  'childs pose':            { desc: 'Kneel and fold forward, arms extended or at your sides, forehead on the floor. A resting stretch for the hips, lower back, and shoulders.', tip: 'Walk your hands further out to increase the lat and side-body stretch.' },
+  'standing forward fold':  { desc: 'Stand with feet hip-width apart and fold forward, letting your upper body hang. Stretches the hamstrings and decompresses the lower spine.', tip: 'Bend your knees generously if hamstrings are tight — it\'s the hang and release that matters, not straight legs.' },
+  'downward dog to cobra':  { desc: 'Flow between downward dog (hips high, body in an inverted V) and cobra (hips low, chest lifted). Warms up the spine, shoulders, and hamstrings together.', tip: 'Move with your breath — inhale to cobra, exhale to downward dog. Let it flow.' },
+  'deep squat hold':        { desc: 'Hold the bottom of a squat — thighs below parallel, heels on the floor — as long as possible. One of the best mobility exercises for hips, ankles, and knees.', tip: 'Hold a pole or door frame at first to stay upright. The goal is heels flat and chest tall.' },
+  'thoracic rotations':     { desc: 'In a side-lying or kneeling position, rotate your upper back open toward the ceiling while your lower body stays stable. Improves mid-spine rotation.', tip: 'The rotation should come from the thoracic spine (mid-back), not the lower back or neck.' },
+  'ankle circles':          { desc: 'Seated or standing, rotate one ankle in full circles, then reverse direction. Improves ankle mobility and warms up the joint before lower-body work.', tip: 'Make the circles as large as possible. Slow, full-range circles beat fast, small ones.' },
+  'wrist carps':            { desc: 'Gentle circular movements of the wrists to warm up and mobilize the joint before loading exercises. Essential before pressing movements.', tip: 'Include both directions and some wrist flexion/extension. Only takes 30 seconds but prevents a lot of issues.' },
+  'worlds greatest stretch': { desc: 'Step into a lunge, drop your same-side elbow to the floor, then rotate that arm up to the ceiling. This single movement hits the hip flexors, thoracic spine, and hamstrings simultaneously.', tip: 'Take your time with each position. This is mobility practice — rushing it defeats the purpose.' },
+
+  // ISOLATION / OTHER
+  'face pull':              { desc: 'Pull resistance toward your face with elbows flaring wide and high, finishing with hands by your ears. Builds rear delts and external rotators — critical for shoulder health.', tip: 'Think about pulling your hands apart as you pull toward your face. This ensures external rotation.' },
+  'l-sit progression':      { desc: 'A progression toward the full L-sit hold. From a supported position, work toward lifting both legs parallel to the floor while supporting your body weight on your hands.', tip: 'Tuck knees first, then single-leg, then full. Each stage requires significant hip flexor and tricep strength.' },
+};
+
+function normalizeExerciseName(name) {
+  // Strip side and modifier suffixes
+  let n = name.replace(/\s*\([LR]\)\s*$/i, '').replace(/\s*\(light\)\s*$/i, '').trim().toLowerCase();
+  // Normalize common plural/spacing variants
+  const aliases = {
+    'swings': 'swing', 'kb swings': 'swing',
+    'goblet squats': 'goblet squat',
+    'lunges': 'lunge', 'reverse lunges': 'reverse lunge',
+    'bent over rows': 'bent over row',
+    'halos': 'halo',
+    'side bends': 'side bend',
+    'pushups': 'push-ups',
+    'pull-ups': 'pull-ups',
+    'step ups': 'step up',
+    'jump squats': 'jump squat',
+    'plank hold': 'plank',
+    'side plank': 'side plank',
+    'snatch': 'snatch',
+    'clean & press': 'clean & press',
+    'windmill': 'windmill',
+    'pigeon pose': 'pigeon pose',
+    'couch stretch': 'couch stretch',
+    'single arm swing': 'swing',
+    'single arm snatch': 'snatch',
+  };
+  return aliases[n] || n;
+}
+
+function openExercise(name) {
+  const key = normalizeExerciseName(name);
+  const info = EXERCISE_INFO[key];
+  // Strip (R)/(L)/(Light) for display title
+  const displayName = name.replace(/\s*\([LR]\)\s*$/i,'').replace(/\s*\(light\)\s*$/i,'').trim();
+  document.getElementById('exercise-title').textContent = displayName;
+  document.getElementById('exercise-desc').textContent = info
+    ? info.desc
+    : 'Hold the kettlebell and perform the movement with control throughout the full range of motion. Focus on quality over speed.';
+  const tipWrap = document.getElementById('exercise-tip-wrap');
+  if (info && info.tip) {
+    document.getElementById('exercise-tip').textContent = info.tip;
+    tipWrap.style.display = '';
+  } else {
+    tipWrap.style.display = 'none';
+  }
+  document.getElementById('exercise-back').onclick = () => showScreen('screen-detail');
+  showScreen('screen-exercise');
+}
+
 // ── CATEGORY ─────────────────────────────────────────────────
 const CATEGORY_MAP = {
   arms:'Arms', back:'Back', cardio:'Cardio', cali:'Calisthenics',
@@ -1013,7 +1261,11 @@ function openDetail(id, fromScreen) {
     ['Work Time', w.work + 's'], ['Rest', w.rest + 's'], ['Round Rest', w.roundRest + 's']
   ].map(([l,v]) => `<div class="param-row card"><span class="param-label">${l}</span><span class="param-value">${v}</span></div>`).join('');
   document.getElementById('detail-exercises').innerHTML = w.exerciseNames.map((n,i) =>
-    `<div class="exercise-row card"><span class="exercise-num">${i+1}</span><span class="exercise-name">${n}</span></div>`).join('');
+    `<div class="exercise-row card tappable" onclick="openExercise('${n.replace(/'/g,"\\'")}')">
+      <span class="exercise-num">${i+1}</span>
+      <span class="exercise-name">${n}</span>
+      <span class="exercise-tap-hint">›</span>
+    </div>`).join('');
   document.getElementById('detail-total').textContent = `Total: ${formatTime(calcTotal(w))}`;
 
   // Difficulty dots on detail screen
