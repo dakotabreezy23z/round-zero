@@ -1535,11 +1535,12 @@ function showCreate(workout) {
 
   const w = workout || {name:'', exercises:1, rounds:1, work:5, rest:10, roundRest:10, exerciseNames:[]};
 
-  let exInputs = '';
+ let exInputs = '';
   for (let i = 0; i < 10; i++) {
-    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:flex;margin-top: 13px>{i<w.exercises?'flex':'none'}">
-      <span class="exercise-num">${i+1}</span>
-      <input id="ex-name-${i}" type="text" value="${w.exerciseNames[i]||''}" class="ex-input" placeholder="EXERCISE NAME">
+    // Note the ${ } around the logic and the properly closed style attribute
+    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:${i < w.exercises ? 'flex' : 'none'}; margin-top: 13px;">
+      <span class="exercise-num">${i + 1}</span>
+      <input id="ex-name-${i}" type="text" value="${w.exerciseNames[i] || ''}" class="ex-input" placeholder="EXERCISE NAME">
     </div>`;
   }
 
