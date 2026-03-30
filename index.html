@@ -417,13 +417,13 @@
   .diff-dots { display: flex; gap: 5px; }
   .diff-dot { cursor: pointer; flex-shrink: 0;
     width: 14px; height: 14px; border-radius: 50%;
-    border: 7.5px solid rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.45);
     background: transparent;
     transition: background 0.12s, border-color 0.12s, transform 0.1s;
   }
   .diff-dot:active { transform: scale(0.75); }
   .diff-dot.filled { background: var(--white); border-color: var(--white); }
-  .diff-dot.large { width: 22px; height: 22px; border-width: 18px; }
+  .diff-dot.large { width: 22px; height: 22px; border-width: 2px; }
 
   /* category pill on library cards */
   .workout-category {
@@ -463,12 +463,11 @@
     transition: background 0.15s, border-color 0.15s, transform 0.1s;
     cursor: pointer;
   }
-  
   .done-diff-dot.filled {
     background: var(--white);
     border-color: var(--white);
   }
-  .done-diff-dot:active { transform: scale(0.100); }
+  .done-diff-dot:active { transform: scale(0.88); }
 
   /* detail screen difficulty */
   .detail-difficulty {
@@ -478,8 +477,7 @@
     align-items: center;
     gap: 10px;
   }
- 
-  .detail-difficulty .diff-dots { gap: 13px; }
+  .detail-difficulty .diff-dots { gap: 10px; }
   .detail-diff-label {
     font-size: 14px;
     font-weight: 400;
@@ -520,10 +518,9 @@
     line-height: 1; letter-spacing: 4px;
   }
   .done-sub {
-    font-size: 12px; color: rgba(255,255,255,0.55);
+    font-size: 14px; color: rgba(255,255,255,0.45);
     font-family: 'Barlow', sans-serif; margin-bottom: -12px; letter-spacing: 3px;
   }
-
   .done-btn {
     width: 100%;
     background: rgba(255,255,255,0.15); color: var(--white);
@@ -1318,7 +1315,7 @@ const PHASE_COLORS = {
   getready:  '#006666',
   work:      '#FF8000',
   rest:      '#994C00',
-  roundrest: '#FFE600',
+  roundrest: '#FCD031',
   done:      '#006666'
 };
 
