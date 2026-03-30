@@ -1537,7 +1537,7 @@ function showCreate(workout) {
 
   let exInputs = '';
   for (let i = 0; i < 10; i++) {
-    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:${i<w.exercises?'flex':'none'}">
+    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:flex;margin-top: 13px>{i<w.exercises?'flex':'none'}">
       <span class="exercise-num">${i+1}</span>
       <input id="ex-name-${i}" type="text" value="${w.exerciseNames[i]||''}" class="ex-input" placeholder="EXERCISE NAME">
     </div>`;
