@@ -23,7 +23,7 @@
     --card-active: rgba(255,255,255,0.22);
     --white: #ffffff;
     --faint: rgba(255,255,255,0.55);
-    --danger: #A43535;
+    --danger: #FF4444;
   }
   html {
     height: 100%;
@@ -225,9 +225,9 @@
 
   .btn-danger {
     width: 100%;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: var(--danger);
-    border: 2px solid rgba(153, 55, 55, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     padding: 30px;
     font-size: 17px; font-weight: 400; letter-spacing: 4px;
@@ -287,7 +287,7 @@
   .ex-input {
     background: none; border: none; outline: none;
     color: var(--white); font-family: 'ANTON', sans-serif;
-    font-size: 22px; font-weight: 600; letter-spacing: 3.3px;
+    font-size: 18px; font-weight: 800; letter-spacing: 1.3px;
     text-transform: uppercase; flex: 1; width: 100%;
   }
   .ex-input::placeholder { color: var(--faint); }
@@ -299,7 +299,7 @@
     padding: 16px 20px;
     color: var(--white);
     font-family: 'anton', sans-serif;
-    font-size: 22px; font-weight: 600; letter-spacing: 3.3px;
+    font-size: 22px; font-weight: 800; letter-spacing: 1.3px;
     text-transform: uppercase; outline: none; text-align: center;
   }
   .create-name-input::placeholder { color: var(--faint); }
@@ -379,12 +379,12 @@
     text-align: center; line-height: 1.1;
   }
   .timer-round-info {
-    font-size: 22px; color: rgba(255,255,255,0.55);
+    font-size: 15px; color: rgba(255,255,255,0.55);
     font-family: 'Barlow', sans-serif; text-align: center;
     margin-top: 4px; letter-spacing: 0.5px;
   }
   .timer-total-remaining {
-    font-size: 17px; color: rgba(255,255,255,0.4);
+    font-size: 13px; color: rgba(255,255,255,0.4);
     font-family: 'Barlow', sans-serif; text-align: center;
     letter-spacing: 1px; margin-top: 2px;
   }
@@ -394,7 +394,7 @@
     background: rgba(255,255,255,0.15);
     border: 1.5px solid rgba(255,255,255,0.25);
     border-radius: 16px; padding: 18px 8px;
-    font-size: 20px; font-weight: 400; letter-spacing: 3px;
+    font-size: 15px; font-weight: 400; letter-spacing: 2px;
     text-transform: uppercase; color: var(--white);
     cursor: pointer; font-family: 'Anton', sans-serif;
     transition: background 0.12s, transform 0.1s;
@@ -497,11 +497,25 @@
   .done-label {
     font-size: 15px; letter-spacing: 5px; text-transform: uppercase;
     color: rgba(255,255,255,0.55); font-family: 'Barlow', sans-serif;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
+  .done-workout-name {
+    font-size: 28px; font-weight: 400; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--white);
+    text-align: center; line-height: 1.1;
+    margin-bottom: 8px; padding: 0 20px;
+  }
+  .done-star-btn {
+    background: none; border: none;
+    font-size: 38px; color: var(--white);
+    cursor: pointer; padding: 4px;
+    transition: transform 0.12s;
+    line-height: 1;
+  }
+  .done-star-btn:active { transform: scale(1.35); }
   .done-time {
-    font-size: 120px; font-weight: 800; color: var(--white);
-    line-height: 1; letter-spacing: 5px;
+    font-size: 88px; font-weight: 400; color: var(--white);
+    line-height: 1; letter-spacing: 2px;
   }
   .done-sub {
     font-size: 14px; color: rgba(255,255,255,0.45);
@@ -530,7 +544,7 @@
     gap: 20px;
   }
   .exercise-info-desc {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 1.65;
     color: var(--white);
@@ -541,7 +555,7 @@
     padding: 20px;
   }
   .exercise-info-tip {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 400;
     line-height: 1.6;
     color: var(--faint);
@@ -742,8 +756,10 @@
 <!-- DONE SCREEN -->
 <div id="screen-done" class="screen">
   <div class="done-label">Workout Complete</div>
+  <div class="done-workout-name" id="done-workout-name"></div>
   <div class="done-time" id="done-time">0:00</div>
   <div class="done-sub">total time</div>
+  <button class="done-star-btn" id="done-star-btn" onclick="toggleDoneStar()">☆</button>
   <div class="done-difficulty" id="done-difficulty" style="display:none">
     <div class="done-diff-label">Difficulty</div>
     <div class="done-diff-dots" id="done-diff-dots">
@@ -767,7 +783,7 @@
   <div class="exercise-info-body">
     <div class="exercise-info-desc" id="exercise-desc"></div>
     <div class="exercise-info-tip" id="exercise-tip-wrap">
-      <span class="exercise-info-tip-label">Tip</span>
+      <span class="exercise-info-tip-label">💡 Tip</span>
       <span id="exercise-tip"></span>
     </div>
   </div>
@@ -1299,7 +1315,7 @@ const PHASE_COLORS = {
   getready:  '#006666',
   work:      '#FF8000',
   rest:      '#994C00',
-  roundrest: '#FFDE00',
+  roundrest: '#FCD031',
   done:      '#006666'
 };
 
@@ -1471,9 +1487,20 @@ function finishTimer() {
   const elapsed = Math.round((Date.now() - timerStartEpoch) / 1000);
   document.getElementById('done-time').textContent = formatTime(elapsed);
 
-  // Show difficulty rating only for named workouts (not quick start)
+  // Workout name + star (only for named workouts, not quick start)
+  const hasWorkout = currentWorkout && currentWorkout.id;
+  document.getElementById('done-workout-name').textContent = hasWorkout ? currentWorkout.name : '';
+  const starBtn = document.getElementById('done-star-btn');
+  if (hasWorkout) {
+    starBtn.style.display = '';
+    starBtn.textContent = favorites.includes(currentWorkout.id) ? '★' : '☆';
+  } else {
+    starBtn.style.display = 'none';
+  }
+
+  // Difficulty dots
   const diffEl = document.getElementById('done-difficulty');
-  if (currentWorkout && currentWorkout.id) {
+  if (hasWorkout) {
     diffEl.style.display = 'flex';
     renderDoneDots(difficulties[currentWorkout.id] || 0);
   } else {
@@ -1481,6 +1508,17 @@ function finishTimer() {
   }
 
   showScreen('screen-done');
+}
+
+function toggleDoneStar() {
+  if (!currentWorkout) return;
+  if (favorites.includes(currentWorkout.id)) {
+    favorites = favorites.filter(f => f !== currentWorkout.id);
+  } else {
+    favorites.push(currentWorkout.id);
+  }
+  saveFavorites();
+  document.getElementById('done-star-btn').textContent = favorites.includes(currentWorkout.id) ? '★' : '☆';
 }
 
 function timerDone() {
@@ -1535,18 +1573,17 @@ function showCreate(workout) {
 
   const w = workout || {name:'', exercises:1, rounds:1, work:5, rest:10, roundRest:10, exerciseNames:[]};
 
- let exInputs = '';
+  let exInputs = '';
   for (let i = 0; i < 10; i++) {
-    // Note the ${ } around the logic and the properly closed style attribute
-    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:${i < w.exercises ? 'flex' : 'none'}; margin-top: 13px;">
-      <span class="exercise-num">${i + 1}</span>
-      <input id="ex-name-${i}" type="text" value="${w.exerciseNames[i] || ''}" class="ex-input" placeholder="EXERCISE NAME">
+    exInputs += `<div class="exercise-row card" id="ex-row-${i}" style="display:${i<w.exercises?'flex':'none'}">
+      <span class="exercise-num">${i+1}</span>
+      <input id="ex-name-${i}" type="text" value="${w.exerciseNames[i]||''}" class="ex-input" placeholder="EXERCISE NAME">
     </div>`;
   }
 
   document.getElementById('create-body').innerHTML = `
     <div class="slider-group">
-      <div class="slider-label"></div>
+      <div class="slider-label">Workout Name</div>
       <input id="create-name" type="text" value="${w.name}" class="create-name-input" placeholder="WORKOUT NAME">
     </div>
     <div class="slider-group">
@@ -1575,7 +1612,7 @@ function showCreate(workout) {
       <input type="range" id="cr-roundrest" min="2" max="24" value="${Math.max(2,Math.round(w.roundRest/5))}" oninput="sliderBeep();updateCreate()">
     </div>
     <div class="slider-group">
-      <div class="slider-label">EXERCISES</div>
+      <div class="slider-label">Exercise Names</div>
       <div style="display:flex;flex-direction:column;gap:8px">${exInputs}</div>
     </div>
     <div class="setup-total" id="cr-total" style="margin-top:8px"></div>
