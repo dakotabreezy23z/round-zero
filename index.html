@@ -287,7 +287,7 @@
   .ex-input {
     background: none; border: none; outline: none;
     color: var(--white); font-family: 'ANTON', sans-serif;
-    font-size: 18px; font-weight: 800; letter-spacing: 1.3px;
+    font-size: 22px; font-weight: 600; letter-spacing: 3.3px;
     text-transform: uppercase; flex: 1; width: 100%;
   }
   .ex-input::placeholder { color: var(--faint); }
@@ -299,7 +299,7 @@
     padding: 16px 20px;
     color: var(--white);
     font-family: 'anton', sans-serif;
-    font-size: 22px; font-weight: 800; letter-spacing: 1.3px;
+    font-size: 22px; font-weight: 600; letter-spacing: 3.3px;
     text-transform: uppercase; outline: none; text-align: center;
   }
   .create-name-input::placeholder { color: var(--faint); }
@@ -1545,7 +1545,7 @@ function showCreate(workout) {
 
   document.getElementById('create-body').innerHTML = `
     <div class="slider-group">
-      <div class="slider-label">Workout Name</div>
+      <div class="slider-label"></div>
       <input id="create-name" type="text" value="${w.name}" class="create-name-input" placeholder="WORKOUT NAME">
     </div>
     <div class="slider-group">
