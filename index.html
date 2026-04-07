@@ -1421,6 +1421,17 @@ function runTick() {
     timerTimeLeft--;
     updateTimerDisplay(timerTimeLeft, timerSequence[timerIndex].duration);
 
+    const phase = timerSequence[timerIndex];
+
+    // Midpoint beep — work phases only, exactly at the halfway mark
+    if (phase.type === 'work') {
+      const half = Math.floor(phase.duration / 2);
+      if (timerTimeLeft === half) {
+        timerBeep(880);
+        setTimeout(() => timerBeep(880), 180);
+      }
+    }
+
     // 3, 2, 1 — high beep; 0 — even higher beep
     if (timerTimeLeft >= 1 && timerTimeLeft <= 3) timerBeep(660);
     if (timerTimeLeft === 0) {
